@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Ignore csv datasets directory
+assist_material/datasets/csv/*
+
