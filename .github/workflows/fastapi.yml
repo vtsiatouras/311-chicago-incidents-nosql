@@ -1,0 +1,50 @@
+name: FastAPI CI
+
+on: [push]
+
+env:
+  FAIL_LEVEL: WARNING
+  ENV_TYPE: pipenv
+#  CHICAGO_INCIDENT_DATABASE_USER: test_user
+#  CHICAGO_INCIDENT_DATABASE_PASSWORD: password
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+
+    services:
+#      postgres:
+#        image: postgres:12.5
+#        env:
+#          POSTGRES_USER: test_user
+#          POSTGRES_PASSWORD: password
+#          POSTGRES_DB: chicago_incident_development_db
+#        ports:
+#          - 5432:5432
+#        # needed because the postgres container does not provide a healthcheck
+#        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Install Dependencies
+        run: |
+          pip install pipenv
+          pipenv install --dev
+      - name: Run Tests
+        run: |
+          pipenv run pytest app --cov=./ --cov-report=xml
+      - name: Upload Coverage Report
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./backend/coverage.xml
+          #          yml: ./backend/codecov.yml
+          flags: unittests
+          fail_ci_if_error: true
