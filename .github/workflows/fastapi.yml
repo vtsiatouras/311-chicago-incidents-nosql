@@ -15,7 +15,7 @@ jobs:
     strategy:
       max-parallel: 4
 
-    services:
+#    services:
 #      postgres:
 #        image: postgres:12.5
 #        env:
