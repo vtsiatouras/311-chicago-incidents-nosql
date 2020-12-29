@@ -44,7 +44,6 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./backend/coverage.xml
-          #          yml: ./backend/codecov.yml
+          file: coverage.xml
           flags: unittests
           fail_ci_if_error: true
