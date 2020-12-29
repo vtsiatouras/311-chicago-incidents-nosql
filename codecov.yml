@@ -1,0 +1,7 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 70%    # PRs that have coverage below 70% should be marked as failed
+        threshold: 5%  # Allow coverage to drop by up to 5% in a PR before marking it failed
+    patch: off         # Disable patch status
