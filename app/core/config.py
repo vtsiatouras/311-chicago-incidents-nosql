@@ -1,3 +1,4 @@
+import os
 import secrets
 from typing import List, Union
 
@@ -25,15 +26,15 @@ class Settings(BaseSettings):
 
     PROJECT_NAME: str = "311-chicago-incidents"
 
-    # TODO ADD MONGO SETTINGS HERE
-    # POSTGRES_SERVER: str
-    # POSTGRES_USER: str
-    # POSTGRES_PASSWORD: str
-    # POSTGRES_DB: str
-    # SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
+    MONGO_USER: str = os.getenv('MONGO_USER', '')
+    MONGO_PASSWORD: str = os.getenv('MONGO_PASSWORD', '')
+    MONGO_DB: str = os.getenv('MONGO_DB', '')
+    MONGO_HOST: str = os.getenv('MONGO_HOST', '')
+    MONGO_PORT: int = os.getenv('MONGO_PORT', 27017)
 
     class Config:
         case_sensitive = True
+        env_file = '../.env'
 
 
 settings = Settings()
