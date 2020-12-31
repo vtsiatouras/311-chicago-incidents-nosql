@@ -1,4 +1,3 @@
-import os
 import secrets
 from typing import List, Union
 
@@ -26,11 +25,11 @@ class Settings(BaseSettings):
 
     PROJECT_NAME: str = "311-chicago-incidents"
 
-    MONGO_USER: str = os.getenv('MONGO_USER', '')
-    MONGO_PASSWORD: str = os.getenv('MONGO_PASSWORD', '')
-    MONGO_DB: str = os.getenv('MONGO_DB', '')
-    MONGO_HOST: str = os.getenv('MONGO_HOST', '')
-    MONGO_PORT: int = os.getenv('MONGO_PORT', 27017)
+    MONGO_USER: str
+    MONGO_PASSWORD: str
+    MONGO_DB: str
+    MONGO_HOST: str
+    MONGO_PORT: int = 27017
 
     class Config:
         case_sensitive = True
