@@ -25,15 +25,15 @@ class Settings(BaseSettings):
 
     PROJECT_NAME: str = "311-chicago-incidents"
 
-    # TODO ADD MONGO SETTINGS HERE
-    # POSTGRES_SERVER: str
-    # POSTGRES_USER: str
-    # POSTGRES_PASSWORD: str
-    # POSTGRES_DB: str
-    # SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
+    MONGO_USER: str
+    MONGO_PASSWORD: str
+    MONGO_DB: str
+    MONGO_HOST: str
+    MONGO_PORT: int = 27017
 
     class Config:
         case_sensitive = True
+        env_file = '.env'
 
 
 settings = Settings()
