@@ -11,9 +11,10 @@ pytest-cov = "*"
 [packages]
 fastapi = "~=0.63.0"
 uvicorn = "~=0.13.2"
-pydantic = "*"
+pydantic = {extras = ["dotenv"], version = "*"}
 starlette = "*"
 requests = "*"
+pymongo = "*"
 
 [requires]
 python_version = "3.8"
