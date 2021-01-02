@@ -16,6 +16,8 @@ pydantic = {extras = ["dotenv"], version = "*"}
 starlette = "*"
 requests = "*"
 pymongo = "*"
+numpy = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.8"
