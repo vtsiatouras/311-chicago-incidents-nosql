@@ -18,6 +18,7 @@ requests = "*"
 pymongo = "*"
 numpy = "*"
 pandas = "*"
+Faker = "*"
 
 [requires]
 python_version = "3.8"
