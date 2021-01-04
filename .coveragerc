@@ -1,0 +1,4 @@
+[run]
+omit = /usr/*
+       *__init__*
+       *scripts*
