@@ -28,6 +28,11 @@ def fetch_random_incident_object_ids(number_of_incidents: int) -> List[str]:
 
 
 def create_rng_citizens(number_of_citizens: int) -> List[dict]:
+    """ Method that generate citizen data
+
+    :param number_of_citizens: The amount of citizens to generate
+    :return: List that contains the generated citizen data
+    """
     fake = Faker()
     citizens = list()
     for it in range(number_of_citizens):
@@ -74,10 +79,10 @@ def list_random_chunks(elements_list: list, number_of_chunks: int, max_size: int
     return chunks
 
 
-def create_up_votes():
+def create_up_votes() -> None:
     """ Routine that casts citizen vote to random incidents in order to populate the database with up-votes data
 
-    :return:
+    :return: None
     """
     incident_ids = fetch_random_incident_object_ids(number_of_incidents=2000000)
     citizens = create_rng_citizens(number_of_citizens=NUMBER_OF_CITIZENS)
