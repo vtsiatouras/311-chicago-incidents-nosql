@@ -105,7 +105,3 @@ def create_up_votes():
             },
             upsert=False
         )
-
-
-if __name__ == '__main__':
-    create_up_votes()

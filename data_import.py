@@ -38,6 +38,7 @@ for input_file in args.input_files:
     else:
         print(f"File '{input_file}' cannot be processed, skipping.")
 
+print("Generating citizens and up-votes")
 citizens_data_import.create_up_votes()
 
 end = time.time()
