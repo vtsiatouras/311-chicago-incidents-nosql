@@ -138,7 +138,7 @@ def import_tree_debris(input_file: str) -> None:
     input_df = pd.read_csv(input_file, sep=',').replace({np.nan: None})
 
     input_df.columns = ['creation_date', 'status', 'completion_date', 'service_request_number',
-                        'type_of_service_request', 'location', 'current_activity',
+                        'type_of_service_request', 'tree_location', 'current_activity',
                         'most_recent_action', 'street_address', 'zip_code', 'x_coordinate', 'y_coordinate',
                         'ward', 'police_district', 'community_area', 'latitude', 'longitude',
                         'location', 'historical_wards_03_15', 'zip_codes', 'community_areas',
@@ -159,7 +159,7 @@ def import_tree_trims(input_file: str) -> None:
     input_df = pd.read_csv(input_file, sep=',').replace({np.nan: None})
 
     input_df.columns = ['creation_date', 'status', 'completion_date', 'service_request_number',
-                        'type_of_service_request', 'location', 'street_address', 'zip_code', 'x_coordinate',
+                        'type_of_service_request', 'tree_location', 'street_address', 'zip_code', 'x_coordinate',
                         'y_coordinate', 'ward', 'police_district', 'community_area', 'latitude', 'longitude',
                         'location', 'historical_wards_03_15', 'zip_codes', 'community_areas',
                         'census_tracts', 'wards']
