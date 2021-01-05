@@ -1,6 +1,6 @@
 import time
 
-import incidents_data_import
+from app.import_scripts import incidents_data_import, citizens_data_import
 
 from argparse import ArgumentParser
 
@@ -38,7 +38,7 @@ for input_file in args.input_files:
     else:
         print(f"File '{input_file}' cannot be processed, skipping.")
 
-# TODO add citizens data import routines
+citizens_data_import.create_up_votes()
 
 end = time.time()
 print(f"Finished importing datasets, took {(end - start):.2f} seconds")
