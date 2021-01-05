@@ -10,10 +10,6 @@ router = APIRouter()
 
 @router.get("/home", response_model=str)
 def home(db: Database = Depends(get_db)) -> Any:
+    """ Home page endpoint
     """
-    Retrieve items.
-    """
-    docs = db.incidents.find()
-    for doc in docs:
-        print(doc)
     return 'Hello world!'
