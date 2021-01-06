@@ -16,7 +16,7 @@ def total_requests_per_type(start_date: datetime, end_date: datetime, db: Databa
     them in a descending order.
     """
     cursor = db['incidents'].aggregate([
-        {"$match": {"creation_date": {"$gte": str(start_date), "$lte": str(end_date)}}},
+        {"$match": {"creation_date": {"$gte": start_date, "$lte": end_date}}},
         {"$project": {"_id": 1, "type_of_service_request": 1}},
         {"$group": {"_id": "$type_of_service_request", "count": {"$sum": 1}}},
         {"$sort": {"count": -1}}
