@@ -221,4 +221,12 @@ def __dataframe_normalization__(df: pd.DataFrame) -> pd.DataFrame:
     df = df.drop_duplicates(['creation_date', 'status', 'completion_date', 'service_request_number',
                              'type_of_service_request', 'street_address', 'zip_code'], keep='last')
 
+    # Add UTC timezone to datetime fields
+    df['creation_date'] = pd.to_datetime(df['creation_date'], errors='ignore')
+    df['creation_date'] = df['creation_date'].dt.tz_localize("UTC")
+    df['creation_date'] = df['creation_date'].astype(object).where(df['creation_date'].notnull(), None)
+    df['completion_date'] = pd.to_datetime(df['completion_date'], errors='ignore')
+    df['completion_date'] = df['completion_date'].dt.tz_localize("UTC")
+    df['completion_date'] = df['completion_date'].astype(object).where(df['completion_date'].notnull(), None)
+
     return df

@@ -88,3 +88,8 @@ class Citizen(BaseModel):
         json_encoders = {
             ObjectId: str
         }
+
+
+class FieldWithCount(BaseModel):
+    id: str = Field(alias='_id')
+    count: str

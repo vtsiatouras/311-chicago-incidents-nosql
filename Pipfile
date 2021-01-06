@@ -8,6 +8,7 @@ pylint = "*"
 pytest = "*"
 pytest-cov = "*"
 mongomock = "*"
+python-dateutil = "*"
 
 [packages]
 fastapi = "~=0.63.0"
