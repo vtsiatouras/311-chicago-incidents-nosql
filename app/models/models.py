@@ -4,6 +4,8 @@ from pydantic import BaseModel, Field
 from bson import ObjectId
 from typing import Optional
 
+from pydantic.class_validators import Any
+
 
 class PyObjectId(ObjectId):
 
@@ -91,5 +93,5 @@ class Citizen(BaseModel):
 
 
 class FieldWithCount(BaseModel):
-    id: str = Field(alias='_id')
-    count: str
+    id: Any = Field(alias='_id')
+    count: int
