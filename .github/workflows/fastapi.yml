@@ -21,9 +21,9 @@ jobs:
       mongodb:
         image: mongo:4.4.2
         env:
-          MONGO_USER: test_user
-          MONGO_PASSWORD: password
-          MONGO_DB: chicago_incidents_test
+          MONGO_INITDB_ROOT_USERNAME: test_user
+          MONGO_INITDB_ROOT_PASSWORD: password
+          MONGO_INITDB_DATABASE: chicago_incidents_test
           MONGO_HOST: localhost
         ports:
           - 27017:27017
