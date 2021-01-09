@@ -58,5 +58,4 @@ def total_requests_per_day(
         {"$group": {"_id": "$creation_date", "count": {"$sum": 1}}},
         {"$sort": {"_id": -1}}
     ])
-    # print(list(cursor))
     return list(cursor)
