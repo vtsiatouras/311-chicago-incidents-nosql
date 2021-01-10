@@ -32,10 +32,11 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install pipenv
+          pipenv --python ${{ matrix.python-version }} lock --dev
           pipenv --python ${{ matrix.python-version }} install --dev
       - name: Run Tests
         run: |
-          pipenv run pytest app --cov=./ --cov-report=xml
+          pipenv --python ${{ matrix.python-version }} run pytest app --cov=./ --cov-report=xml
       - name: Upload Coverage Report
         uses: codecov/codecov-action@v1
         with:
