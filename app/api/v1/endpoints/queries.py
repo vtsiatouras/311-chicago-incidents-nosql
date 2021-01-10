@@ -82,7 +82,7 @@ def three_most_common_requests_per_zipcode(
 
 
 @router.get('/three-least-common-wards', response_model=List[FieldWithCount])
-def three_most_common_requests_per_zipcode(
+def three_least_common_wards(
         request_type: TypeOfServiceRequest,
         db: Database = Depends(get_db)
 ) -> Any:
