@@ -15,6 +15,8 @@ jobs:
 
     runs-on: ubuntu-latest
     strategy:
+      matrix:
+        python-version: [ 3.7, 3.8, 3.9 ]
       max-parallel: 4
 
     steps:
@@ -23,10 +25,10 @@ jobs:
         run: |
           cd .github/helper_files
           docker-compose up --build -d mongodb
-      - name: Set up Python
-        uses: actions/setup-python@v1
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: ${{ matrix.python-version }}
       - name: Install Dependencies
         run: |
           pip install pipenv
