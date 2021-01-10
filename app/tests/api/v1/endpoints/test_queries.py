@@ -12,9 +12,9 @@ def test_total_requests_per_type(client: TestClient) -> None:
     r = client.get(f"{settings.API_V1_STR}/total-requests-per-type",
                    params={'start_date': '2014-04-09T00:00:00', 'end_date': '2017-04-09T00:00:00'})
     response = r.json()
-    assert response == [{"_id": "ABANDONED_VEHICLE", "count": 6}, {"_id": "POTHOLE", "count": 3},
-                        {"_id": "STREET_ONE_LIGHT", "count": 3}, {"_id": "GRAFFITI", "count": 2},
-                        {"_id": "ALLEY_LIGHTS", "count": 1}]
+    assert response == [{'_id': 'ABANDONED_VEHICLE', 'count': 6}, {'_id': 'POTHOLE', 'count': 3},
+                        {'_id': 'STREET_ONE_LIGHT', 'count': 3}, {'_id': 'GRAFFITI', 'count': 2},
+                        {'_id': 'ALLEY_LIGHTS', 'count': 1}]
 
     r = client.get(f"{settings.API_V1_STR}/total-requests-per-type",
                    params={'start_date': '2019-04-09T00:00:00', 'end_date': '2020-04-09T00:00:00'})
@@ -54,9 +54,9 @@ def test_total_requests_per_day(client: TestClient) -> None:
                    params={'start_date': '2014-04-09T00:00:00', 'end_date': '2017-04-09T00:00:00',
                            'request_type': 'ABANDONED_VEHICLE'})
     response = r.json()
-    assert response == [{"_id": "2015-05-08T00:00:00", "count": 2},
-                        {"_id": "2015-04-08T00:00:00", "count": 2},
-                        {"_id": "2015-04-07T00:00:00", "count": 2}]
+    assert response == [{'_id': '2015-05-08T00:00:00', 'count': 2},
+                        {'_id': '2015-04-08T00:00:00', 'count': 2},
+                        {'_id': '2015-04-07T00:00:00', 'count': 2}]
 
     r = client.get(f"{settings.API_V1_STR}/total-requests-per-day",
                    params={'start_date': '2019-04-09T00:00:00', 'end_date': '2020-04-09T00:00:00',
@@ -177,4 +177,42 @@ def test_three_least_common_wards_malformed_type_param(client: TestClient) -> No
 
     r = client.get(f"{settings.API_V1_STR}/three-least-common-wards",
                    params={'request_type': ''})
+    assert r.status_code == 422
+
+
+def test_average_completion_time_per_request(client: TestClient) -> None:
+    r = client.get(f"{settings.API_V1_STR}/average-completion-time-per-request",
+                   params={'start_date': '2014-04-09T00:00:00', 'end_date': '2017-04-09T00:00:00'})
+    response = r.json()
+    assert response == [{'_id': 'ABANDONED_VEHICLE', 'average_completion_time': '11 days, 16:00:00'},
+                        {'_id': 'ALLEY_LIGHTS', 'average_completion_time': '32 days, 0:00:00'},
+                        {'_id': 'GRAFFITI', 'average_completion_time': '32 days, 0:00:00'},
+                        {'_id': 'POTHOLE', 'average_completion_time': '32 days, 0:00:00'},
+                        {'_id': 'STREET_ONE_LIGHT', 'average_completion_time': '32 days, 0:00:00'}]
+
+    r = client.get(f"{settings.API_V1_STR}/average-completion-time-per-request",
+                   params={'start_date': '2019-04-09T00:00:00', 'end_date': '2020-04-09T00:00:00'})
+    response = r.json()
+    assert response == []
+
+
+def test_average_completion_time_per_request_malformed_date_params(client: TestClient) -> None:
+    r = client.get(f"{settings.API_V1_STR}/average-completion-time-per-request",
+                   params={'start_date': '00:00:00', 'end_date': '2017-04-09T00:00:00'})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/average-completion-time-per-request",
+                   params={'start_date': '2017-04-09T00:00:00', 'end_date': '00:00:00'})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/average-completion-time-per-request",
+                   params={'start_date': '', 'end_date': '2017-04-09T00:00:00'})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/average-completion-time-per-request",
+                   params={'start_date': '2017-04-09T00:00:00', 'end_date': ''})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/average-completion-time-per-request",
+                   params={'start_date': '', 'end_date': ''})
     assert r.status_code == 422

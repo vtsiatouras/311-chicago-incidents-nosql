@@ -212,17 +212,6 @@ def average_completion_time_per_request(
                 'type_of_service_request': 1
             }
         },
-        # {
-        #     '$project': {
-        #         '_id': 1,
-        #         'average_completion_time': {
-        #             '$subtract': [
-        #                 '$$NOW', '$creation_date'
-        #             ]
-        #         },
-        #         'type_of_service_request': 1
-        #     }
-        # },
         {
             '$group': {
                 '_id': '$type_of_service_request',
