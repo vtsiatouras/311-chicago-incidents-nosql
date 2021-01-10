@@ -1,6 +1,6 @@
 import time
 
-from app.import_scripts import incidents_data_import, citizens_data_import
+from app.import_scripts import incidents_data_import, citizens_data_import, create_indexes
 
 from argparse import ArgumentParser
 
@@ -40,6 +40,9 @@ for input_file in args.input_files:
 
 print("Generating citizens and up-votes")
 citizens_data_import.create_up_votes()
+
+print("Creating Indexes")
+create_indexes.create_indexes()
 
 end = time.time()
 print(f"Finished importing datasets, took {(end - start):.2f} seconds")

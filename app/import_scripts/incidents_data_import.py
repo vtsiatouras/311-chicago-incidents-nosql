@@ -19,7 +19,7 @@ def import_abandoned_vehicles(input_file: str) -> None:
                         'zip_code', 'x_coordinate', 'y_coordinate', 'ward', 'police_district', 'community_area',
                         'ssa', 'latitude', 'longitude', 'geo_location', 'historical_wards_03_15', 'zip_codes',
                         'community_areas', 'census_tracts', 'wards']
-    input_df = __dataframe_normalization__(input_df)
+    input_df = __dataframe_normalization__(input_df, 'ABANDONED_VEHICLE')
     docs = input_df.to_dict(orient='records')
     db['incidents'].insert_many(docs)
 
@@ -40,7 +40,7 @@ def import_garbage_carts(input_file: str) -> None:
                         'ward', 'police_district', 'community_area', 'ssa', 'latitude', 'longitude',
                         'location', 'historical_wards_03_15', 'zip_codes', 'community_areas',
                         'census_tracts', 'wards']
-    input_df = __dataframe_normalization__(input_df)
+    input_df = __dataframe_normalization__(input_df, 'GARBAGE_CART')
     docs = input_df.to_dict(orient='records')
     db['incidents'].insert_many(docs)
 
@@ -61,7 +61,7 @@ def import_potholes(input_file: str) -> None:
                         'ward', 'police_district', 'community_area', 'ssa', 'latitude', 'longitude',
                         'location', 'historical_wards_03_15', 'zip_codes', 'community_areas',
                         'census_tracts', 'wards']
-    input_df = __dataframe_normalization__(input_df)
+    input_df = __dataframe_normalization__(input_df, 'POTHOLE')
     docs = input_df.to_dict(orient='records')
     db['incidents'].insert_many(docs)
 
@@ -81,7 +81,7 @@ def import_graffiti(input_file: str) -> None:
                         'zip_code', 'x_coordinate', 'y_coordinate', 'ward', 'police_district', 'community_area',
                         'ssa', 'latitude', 'longitude', 'location', 'historical_wards_03_15', 'zip_codes',
                         'community_areas', 'census_tracts', 'wards']
-    input_df = __dataframe_normalization__(input_df)
+    input_df = __dataframe_normalization__(input_df, 'GRAFFITI')
     docs = input_df.to_dict(orient='records')
     db['incidents'].insert_many(docs)
 
@@ -102,7 +102,7 @@ def import_rodent_baiting(input_file: str) -> None:
                         'zip_code', 'x_coordinate', 'y_coordinate', 'ward', 'police_district', 'community_area',
                         'latitude', 'longitude', 'location', 'historical_wards_03_15', 'zip_codes',
                         'community_areas', 'census_tracts', 'wards']
-    input_df = __dataframe_normalization__(input_df)
+    input_df = __dataframe_normalization__(input_df, 'RODENT_BAITING')
     docs = input_df.to_dict(orient='records')
     db['incidents'].insert_many(docs)
 
@@ -122,7 +122,7 @@ def import_sanitation_complaints(input_file: str) -> None:
                         'zip_code', 'x_coordinate', 'y_coordinate', 'ward', 'police_district', 'community_area',
                         'latitude', 'longitude', 'location', 'historical_wards_03_15', 'zip_codes',
                         'community_areas', 'census_tracts', 'wards']
-    input_df = __dataframe_normalization__(input_df)
+    input_df = __dataframe_normalization__(input_df, 'SANITATION_VIOLATION')
     docs = input_df.to_dict(orient='records')
     db['incidents'].insert_many(docs)
 
@@ -143,7 +143,7 @@ def import_tree_debris(input_file: str) -> None:
                         'ward', 'police_district', 'community_area', 'latitude', 'longitude',
                         'location', 'historical_wards_03_15', 'zip_codes', 'community_areas',
                         'census_tracts', 'wards']
-    input_df = __dataframe_normalization__(input_df)
+    input_df = __dataframe_normalization__(input_df, 'TREE_DEBRIS')
     docs = input_df.to_dict(orient='records')
     db['incidents'].insert_many(docs)
 
@@ -163,7 +163,7 @@ def import_tree_trims(input_file: str) -> None:
                         'y_coordinate', 'ward', 'police_district', 'community_area', 'latitude', 'longitude',
                         'location', 'historical_wards_03_15', 'zip_codes', 'community_areas',
                         'census_tracts', 'wards']
-    input_df = __dataframe_normalization__(input_df)
+    input_df = __dataframe_normalization__(input_df, 'TREE_TRIMS')
     docs = input_df.to_dict(orient='records')
     db['incidents'].insert_many(docs)
 
@@ -175,11 +175,6 @@ def import_alley_lights_out_or_street_lights_all_out(input_file: str, street_lig
     :param input_file: The file from which to load the requests for lights incidents.
     :param street_lights: Indicator if the method is called for street lights or not
     """
-    if street_lights:
-        print("Getting requests for street lights all out")
-    else:
-        print("Getting requests for alley lights out")
-
     db = next(get_db())
 
     input_df = pd.read_csv(input_file, sep=',').replace({np.nan: None})
@@ -187,7 +182,12 @@ def import_alley_lights_out_or_street_lights_all_out(input_file: str, street_lig
                         'type_of_service_request', 'street_address', 'zip_code', 'x_coordinate', 'y_coordinate',
                         'ward', 'police_district', 'community_area', 'latitude', 'longitude', 'location',
                         'historical_wards_03_15', 'zip_codes', 'community_areas', 'census_tracts', 'wards']
-    input_df = __dataframe_normalization__(input_df)
+    if street_lights:
+        print("Getting requests for street lights all out")
+        input_df = __dataframe_normalization__(input_df, 'STREET_ALL_LIGHTS')
+    else:
+        print("Getting requests for alley lights out")
+        input_df = __dataframe_normalization__(input_df, 'ALLEY_LIGHTS')
     docs = input_df.to_dict(orient='records')
     db['incidents'].insert_many(docs)
 
@@ -204,22 +204,26 @@ def import_street_lights_one_out(input_file: str):
     input_df.columns = ['creation_date', 'status', 'completion_date', 'service_request_number',
                         'type_of_service_request', 'street_address', 'zip_code', 'x_coordinate', 'y_coordinate',
                         'ward', 'police_district', 'community_area', 'latitude', 'longitude', 'location']
-    input_df = __dataframe_normalization__(input_df)
+    input_df = __dataframe_normalization__(input_df, 'STREET_ONE_LIGHT')
     docs = input_df.to_dict(orient='records')
     db['incidents'].insert_many(docs)
 
 
-def __dataframe_normalization__(df: pd.DataFrame) -> pd.DataFrame:
+def __dataframe_normalization__(df: pd.DataFrame, request_type: str) -> pd.DataFrame:
     """ Normalizes a given dataframe to a desired condition (removes duplicate rows, convert times to timezone
     aware etc.)
 
     :param df: A pandas dataframe
+    :param request_type: The type of the incident
     :return:  The normalized dataframe
     """
     df = df.copy(deep=True)
 
     df = df.drop_duplicates(['creation_date', 'status', 'completion_date', 'service_request_number',
                              'type_of_service_request', 'street_address', 'zip_code'], keep='last')
+
+    # Normalize type_of_service_request with the given
+    df['type_of_service_request'] = df['type_of_service_request'].str.replace(r'.+', request_type, regex=True)
 
     # Add UTC timezone to datetime fields
     df['creation_date'] = pd.to_datetime(df['creation_date'], errors='ignore')

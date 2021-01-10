@@ -15,30 +15,25 @@ jobs:
 
     runs-on: ubuntu-latest
     strategy:
+      matrix:
+        python-version: [ 3.7, 3.8, 3.9 ]
       max-parallel: 4
-
-#    services:
-#      postgres:
-#        image: postgres:12.5
-#        env:
-#          POSTGRES_USER: test_user
-#          POSTGRES_PASSWORD: password
-#          POSTGRES_DB: chicago_incident_development_db
-#        ports:
-#          - 5432:5432
-#        # needed because the postgres container does not provide a healthcheck
-#        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v1
+      - name: Set up MongoDB
+        run: |
+          cd .github/helper_files
+          docker-compose up --build -d mongodb
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: ${{ matrix.python-version }}
       - name: Install Dependencies
         run: |
           pip install pipenv
-          pipenv install --dev
+          pipenv --python ${{ matrix.python-version }} lock --dev
+          pipenv --python ${{ matrix.python-version }} install --dev
       - name: Run Tests
         run: |
           pipenv run pytest app --cov=./ --cov-report=xml
