@@ -12,7 +12,7 @@ def test_total_requests_per_type(client: TestClient) -> None:
     r = client.get(f"{settings.API_V1_STR}/total-requests-per-type",
                    params={'start_date': '2014-04-09T00:00:00', 'end_date': '2017-04-09T00:00:00'})
     response = r.json()
-    assert response == [{"_id": "ABANDONED_VEHICLE", "count": 5}, {"_id": "POTHOLE", "count": 3},
+    assert response == [{"_id": "ABANDONED_VEHICLE", "count": 6}, {"_id": "POTHOLE", "count": 3},
                         {"_id": "STREET_ONE_LIGHT", "count": 3}, {"_id": "GRAFFITI", "count": 2},
                         {"_id": "ALLEY_LIGHTS", "count": 1}]
 
@@ -56,7 +56,7 @@ def test_total_requests_per_day(client: TestClient) -> None:
     response = r.json()
     assert response == [{"_id": "2015-05-08T00:00:00", "count": 2},
                         {"_id": "2015-04-08T00:00:00", "count": 2},
-                        {"_id": "2015-04-07T00:00:00", "count": 1}]
+                        {"_id": "2015-04-07T00:00:00", "count": 2}]
 
     r = client.get(f"{settings.API_V1_STR}/total-requests-per-day",
                    params={'start_date': '2019-04-09T00:00:00', 'end_date': '2020-04-09T00:00:00',
@@ -148,4 +148,33 @@ def test_three_most_common_requests_per_zipcode_malformed_date_param(client: Tes
 
     r = client.get(f"{settings.API_V1_STR}/three-most-common-requests-per-zipcode",
                    params={'start_date': ''})
+    assert r.status_code == 422
+
+
+def test_three_least_common_wards(client: TestClient) -> None:
+    r = client.get(f"{settings.API_V1_STR}/three-least-common-wards",
+                   params={'request_type': 'ABANDONED_VEHICLE'})
+    response = r.json()
+    assert response == [{'_id': 45, 'count': 1}, {'_id': 43, 'count': 2}, {'_id': 44, 'count': 3}]
+
+    # There is a record with type of request STREET_ONE_LIGHT which does not have ward.
+    # The total requests with type STREET_ONE_LIGHT are 3
+    r = client.get(f"{settings.API_V1_STR}/three-least-common-wards",
+                   params={'request_type': 'STREET_ONE_LIGHT'})
+    response = r.json()
+    assert response == [{'_id': 45, 'count': 2}]
+
+    r = client.get(f"{settings.API_V1_STR}/three-least-common-wards",
+                   params={'request_type': 'STREET_ALL_LIGHTS'})
+    response = r.json()
+    assert response == []
+
+
+def test_three_least_common_wards_malformed_type_param(client: TestClient) -> None:
+    r = client.get(f"{settings.API_V1_STR}/three-least-common-wards",
+                   params={'request_type': 'ASDF'})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/three-least-common-wards",
+                   params={'request_type': ''})
     assert r.status_code == 422
