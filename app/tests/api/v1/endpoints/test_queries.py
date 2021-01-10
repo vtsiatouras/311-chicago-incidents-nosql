@@ -128,3 +128,24 @@ def test_total_requests_per_request_malformed_type_param(client: TestClient) -> 
                    params={'start_date': '2013-04-09T00:00:00', 'end_date': '2014-04-09T00:00:00',
                            'request_type': ''})
     assert r.status_code == 422
+
+
+def test_three_most_common_requests_per_zipcode(client: TestClient) -> None:
+    r = client.get(f"{settings.API_V1_STR}/three-most-common-requests-per-zipcode",
+                   params={'date': '2015-05-08T00:00:00'})
+    response = r.json()
+    assert len(response) == 4
+    r = client.get(f"{settings.API_V1_STR}/three-most-common-requests-per-zipcode",
+                   params={'date': '2020-05-08T00:00:00'})
+    response = r.json()
+    assert len(response) == 0
+
+
+def test_three_most_common_requests_per_zipcode_malformed_date_param(client: TestClient) -> None:
+    r = client.get(f"{settings.API_V1_STR}/three-most-common-requests-per-zipcode",
+                   params={'date': '00:00:00'})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/three-most-common-requests-per-zipcode",
+                   params={'start_date': ''})
+    assert r.status_code == 422
