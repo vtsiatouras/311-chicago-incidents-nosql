@@ -20,7 +20,10 @@ def import_abandoned_vehicles(input_file: str) -> None:
                         'ssa', 'latitude', 'longitude', 'geo_location', 'historical_wards_03_15', 'zip_codes',
                         'community_areas', 'census_tracts', 'wards']
     input_df = __dataframe_normalization__(input_df, 'ABANDONED_VEHICLE')
-    docs = input_df.to_dict(orient='records')
+    df_docs = input_df.to_dict(orient='records')
+    docs = []
+    for df_doc in df_docs:
+        docs.append({k: v for k, v in df_doc.items() if v is not None})
     db['incidents'].insert_many(docs)
 
 
@@ -41,7 +44,10 @@ def import_garbage_carts(input_file: str) -> None:
                         'location', 'historical_wards_03_15', 'zip_codes', 'community_areas',
                         'census_tracts', 'wards']
     input_df = __dataframe_normalization__(input_df, 'GARBAGE_CART')
-    docs = input_df.to_dict(orient='records')
+    df_docs = input_df.to_dict(orient='records')
+    docs = []
+    for df_doc in df_docs:
+        docs.append({k: v for k, v in df_doc.items() if v is not None})
     db['incidents'].insert_many(docs)
 
 
@@ -62,7 +68,10 @@ def import_potholes(input_file: str) -> None:
                         'location', 'historical_wards_03_15', 'zip_codes', 'community_areas',
                         'census_tracts', 'wards']
     input_df = __dataframe_normalization__(input_df, 'POTHOLE')
-    docs = input_df.to_dict(orient='records')
+    df_docs = input_df.to_dict(orient='records')
+    docs = []
+    for df_doc in df_docs:
+        docs.append({k: v for k, v in df_doc.items() if v is not None})
     db['incidents'].insert_many(docs)
 
 
@@ -82,7 +91,10 @@ def import_graffiti(input_file: str) -> None:
                         'ssa', 'latitude', 'longitude', 'location', 'historical_wards_03_15', 'zip_codes',
                         'community_areas', 'census_tracts', 'wards']
     input_df = __dataframe_normalization__(input_df, 'GRAFFITI')
-    docs = input_df.to_dict(orient='records')
+    df_docs = input_df.to_dict(orient='records')
+    docs = []
+    for df_doc in df_docs:
+        docs.append({k: v for k, v in df_doc.items() if v is not None})
     db['incidents'].insert_many(docs)
 
 
@@ -103,7 +115,10 @@ def import_rodent_baiting(input_file: str) -> None:
                         'latitude', 'longitude', 'location', 'historical_wards_03_15', 'zip_codes',
                         'community_areas', 'census_tracts', 'wards']
     input_df = __dataframe_normalization__(input_df, 'RODENT_BAITING')
-    docs = input_df.to_dict(orient='records')
+    df_docs = input_df.to_dict(orient='records')
+    docs = []
+    for df_doc in df_docs:
+        docs.append({k: v for k, v in df_doc.items() if v is not None})
     db['incidents'].insert_many(docs)
 
 
@@ -123,7 +138,10 @@ def import_sanitation_complaints(input_file: str) -> None:
                         'latitude', 'longitude', 'location', 'historical_wards_03_15', 'zip_codes',
                         'community_areas', 'census_tracts', 'wards']
     input_df = __dataframe_normalization__(input_df, 'SANITATION_VIOLATION')
-    docs = input_df.to_dict(orient='records')
+    df_docs = input_df.to_dict(orient='records')
+    docs = []
+    for df_doc in df_docs:
+        docs.append({k: v for k, v in df_doc.items() if v is not None})
     db['incidents'].insert_many(docs)
 
 
@@ -144,7 +162,10 @@ def import_tree_debris(input_file: str) -> None:
                         'location', 'historical_wards_03_15', 'zip_codes', 'community_areas',
                         'census_tracts', 'wards']
     input_df = __dataframe_normalization__(input_df, 'TREE_DEBRIS')
-    docs = input_df.to_dict(orient='records')
+    df_docs = input_df.to_dict(orient='records')
+    docs = []
+    for df_doc in df_docs:
+        docs.append({k: v for k, v in df_doc.items() if v is not None})
     db['incidents'].insert_many(docs)
 
 
@@ -164,7 +185,10 @@ def import_tree_trims(input_file: str) -> None:
                         'location', 'historical_wards_03_15', 'zip_codes', 'community_areas',
                         'census_tracts', 'wards']
     input_df = __dataframe_normalization__(input_df, 'TREE_TRIMS')
-    docs = input_df.to_dict(orient='records')
+    df_docs = input_df.to_dict(orient='records')
+    docs = []
+    for df_doc in df_docs:
+        docs.append({k: v for k, v in df_doc.items() if v is not None})
     db['incidents'].insert_many(docs)
 
 
@@ -188,7 +212,10 @@ def import_alley_lights_out_or_street_lights_all_out(input_file: str, street_lig
     else:
         print("Getting requests for alley lights out")
         input_df = __dataframe_normalization__(input_df, 'ALLEY_LIGHTS')
-    docs = input_df.to_dict(orient='records')
+    df_docs = input_df.to_dict(orient='records')
+    docs = []
+    for df_doc in df_docs:
+        docs.append({k: v for k, v in df_doc.items() if v is not None})
     db['incidents'].insert_many(docs)
 
 
@@ -205,7 +232,10 @@ def import_street_lights_one_out(input_file: str):
                         'type_of_service_request', 'street_address', 'zip_code', 'x_coordinate', 'y_coordinate',
                         'ward', 'police_district', 'community_area', 'latitude', 'longitude', 'location']
     input_df = __dataframe_normalization__(input_df, 'STREET_ONE_LIGHT')
-    docs = input_df.to_dict(orient='records')
+    df_docs = input_df.to_dict(orient='records')
+    docs = []
+    for df_doc in df_docs:
+        docs.append({k: v for k, v in df_doc.items() if v is not None})
     db['incidents'].insert_many(docs)
 
 
