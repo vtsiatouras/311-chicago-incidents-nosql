@@ -2,7 +2,7 @@ import datetime
 
 from pydantic import BaseModel, Field
 from bson import ObjectId
-from typing import Optional
+from typing import Optional, List
 
 from pydantic.class_validators import Any
 
@@ -95,3 +95,16 @@ class Citizen(BaseModel):
 class FieldWithCount(BaseModel):
     id: Any = Field(alias='_id')
     count: int
+
+
+class Top3(BaseModel):
+    type_of_service_request: str
+    count: int
+
+
+class ZipCodeTop3(BaseModel):
+    zip_code: Any = Field(alias='_id')
+    top_three: List[Top3]
+
+    class Config:
+        allow_population_by_field_name = True

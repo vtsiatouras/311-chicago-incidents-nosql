@@ -23,7 +23,7 @@ class Settings(BaseSettings):
             return v
         raise ValueError(v)
 
-    PROJECT_NAME: str = "311-chicago-incidents"
+    PROJECT_NAME: str = "311 Chicago Incidents"
 
     MONGO_USER: str
     MONGO_PASSWORD: str

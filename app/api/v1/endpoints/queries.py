@@ -1,10 +1,10 @@
 from typing import Any, List
-from fastapi import APIRouter, Query, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pymongo.database import Database
 from datetime import datetime
 
 from app.db.db_connection import get_db
-from app.models.models import FieldWithCount
+from app.models.models import FieldWithCount, ZipCodeTop3
 from app.schemas.schemas import TypeOfServiceRequest
 
 router = APIRouter()
@@ -58,4 +58,25 @@ def total_requests_per_day(
         {"$group": {"_id": "$creation_date", "count": {"$sum": 1}}},
         {"$sort": {"_id": -1}}
     ])
+    return list(cursor)
+
+
+@router.get("/three-most-common-requests-per-zipcode", response_model=List[ZipCodeTop3])
+def three_most_common_requests_per_zipcode(
+        date: datetime,
+        db: Database = Depends(get_db)
+) -> Any:
+    """ Find the three most common service requests per zipcode for a specific day.
+    """
+    cursor = db['incidents'].aggregate([
+        {"$match": {"creation_date": date}},
+        {"$project": {"type_of_service_request": 1, "zip_code": 1}},
+        {"$group": {"_id": {"type_of_service_request": "$type_of_service_request", "zip_code": "$zip_code"},
+                    "count": {"$sum": 1}}},
+        {"$sort": {"_id.zip_code": 1, "count": -1}},
+        {"$group": {"_id": "$_id.zip_code", "counts": {
+            "$push": {"type_of_service_request": "$_id.type_of_service_request", "count": "$count"}}}},
+        {"$project": {"top_three": {"$slice": ["$counts", 3]}}}
+    ])
+    # print(list(cursor))
     return list(cursor)
