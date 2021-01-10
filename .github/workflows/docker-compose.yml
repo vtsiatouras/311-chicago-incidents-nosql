@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  mongodb:
+    image: mongo:4.4.2
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: test_user
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: chicago_incidents_test
+    ports:
+      - 27017:27017
+    volumes:
+      - ./init_mongo_user.js:/docker-entrypoint-initdb.d/init_mongo_user.js:ro
