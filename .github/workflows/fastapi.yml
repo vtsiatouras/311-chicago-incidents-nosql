@@ -25,6 +25,10 @@ jobs:
           MONGO_INITDB_ROOT_PASSWORD: password
         ports:
           - 27017:27017
+        volumes:
+          - ./init_mongo_user.js:/docker-entrypoint-initdb.d/init_mongo_user.js:ro
+          - mongodb:/data/db
+          - mongodb_config:/data/configdb
 
     steps:
       - uses: actions/checkout@v2
