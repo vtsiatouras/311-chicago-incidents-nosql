@@ -216,3 +216,80 @@ def test_average_completion_time_per_request_malformed_date_params(client: TestC
     r = client.get(f"{settings.API_V1_STR}/average-completion-time-per-request",
                    params={'start_date': '', 'end_date': ''})
     assert r.status_code == 422
+
+
+def test_most_common_service_in_bounding_box(client: TestClient) -> None:
+    # NotImplementedError: '$geoWithin' is a valid operation but it is not supported by Mongomock yet. :(
+    # r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
+    #                params={'point_a_longitude': -88.64615132728282,
+    #                        'point_a_latitude': 40.93702589972641,
+    #                        'point_b_longitude': -80.64615132728282,
+    #                        'point_b_latitude': 49.93702589972641})
+    # response = r.json()
+    # assert response == [{'_id': 'ABANDONED_VEHICLE', 'count': 5}]
+
+    # r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
+    #                params={'start_date': '2019-04-09T00:00:00', 'end_date': '2020-04-09T00:00:00'})
+    # response = r.json()
+    # assert response == []
+    assert True
+
+
+def test_most_common_service_in_bounding_box_malformed_coordinate_params(client: TestClient) -> None:
+    r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
+                   params={'point_a_longitude': '-88.64615132728282asdf',
+                           'point_a_latitude': 40.93702589972641,
+                           'point_b_longitude': -80.64615132728282,
+                           'point_b_latitude': 49.93702589972641})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
+                   params={'point_a_longitude': -88.64615132728282,
+                           'point_a_latitude': 'asd40.93702589972641',
+                           'point_b_longitude': -80.64615132728282,
+                           'point_b_latitude': 49.93702589972641})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
+                   params={'point_a_longitude': -88.64615132728282,
+                           'point_a_latitude': 40.93702589972641,
+                           'point_b_longitude': 'asd-80.64615132728282',
+                           'point_b_latitude': 49.93702589972641})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
+                   params={'point_a_longitude': -88.64615132728282,
+                           'point_a_latitude': 40.93702589972641,
+                           'point_b_longitude': -80.64615132728282,
+                           'point_b_latitude': 'asd49.93702589972641'})
+    assert r.status_code == 422
+
+
+def test_most_common_service_in_bounding_box_missing_coordinate_params(client: TestClient) -> None:
+    r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
+                   params={'point_a_longitude': '',
+                           'point_a_latitude': 40.93702589972641,
+                           'point_b_longitude': 80.64615132728282,
+                           'point_b_latitude': 49.93702589972641})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
+                   params={'point_a_longitude': -88.64615132728282,
+                           'point_a_latitude': '',
+                           'point_b_longitude': 80.64615132728282,
+                           'point_b_latitude': 49.93702589972641})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
+                   params={'point_a_longitude': -88.64615132728282,
+                           'point_a_latitude': 80.64615132728282,
+                           'point_b_longitude': '',
+                           'point_b_latitude': 49.93702589972641})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
+                   params={'point_a_longitude': -88.64615132728282,
+                           'point_a_latitude': 80.64615132728282,
+                           'point_b_longitude': 49.93702589972641,
+                           'point_b_latitude': ''})
+    assert r.status_code == 422
