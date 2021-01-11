@@ -240,6 +240,7 @@ def average_completion_time_per_request(
 
 @router.get('/most-common-service-in-bounding-box', response_model=Any)
 def most_common_service_in_bounding_box(
+        date: datetime,
         point_a_longitude: float,
         point_a_latitude: float,
         point_b_longitude: float,
@@ -251,14 +252,19 @@ def most_common_service_in_bounding_box(
     cursor = db['incidents'].aggregate([
         {
             '$match': {
-                'geo_location.coordinates': {
-                    '$geoWithin': {
-                        '$box': [
-                            [point_a_longitude, point_a_latitude],
-                            [point_b_longitude, point_b_latitude]
-                        ]
+                '$and': [
+                    {'creation_date': date},
+                    {
+                        'geo_location.coordinates': {
+                            '$geoWithin': {
+                                '$box': [
+                                    [point_a_longitude, point_a_latitude],
+                                    [point_b_longitude, point_b_latitude]
+                                ]
+                            }
+                        }
                     }
-                }
+                ]
             }
         },
         {

@@ -221,7 +221,8 @@ def test_average_completion_time_per_request_malformed_date_params(client: TestC
 def test_most_common_service_in_bounding_box(client: TestClient) -> None:
     # NotImplementedError: '$geoWithin' is a valid operation but it is not supported by Mongomock yet. :(
     # r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
-    #                params={'point_a_longitude': -88.64615132728282,
+    #                params={'date': '2015-04-09T00:00:00',
+    #                        'point_a_longitude': -88.64615132728282,
     #                        'point_a_latitude': 40.93702589972641,
     #                        'point_b_longitude': -80.64615132728282,
     #                        'point_b_latitude': 49.93702589972641})
@@ -237,7 +238,16 @@ def test_most_common_service_in_bounding_box(client: TestClient) -> None:
 
 def test_most_common_service_in_bounding_box_malformed_coordinate_params(client: TestClient) -> None:
     r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
-                   params={'point_a_longitude': '-88.64615132728282asdf',
+                   params={'date': '2015-04-09T00:00:00asdf',
+                           'point_a_longitude': -88.64615132728282,
+                           'point_a_latitude': 40.93702589972641,
+                           'point_b_longitude': -80.64615132728282,
+                           'point_b_latitude': 49.93702589972641})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
+                   params={'date': '2015-04-09T00:00:00',
+                           'point_a_longitude': '-88.64615132728282asdf',
                            'point_a_latitude': 40.93702589972641,
                            'point_b_longitude': -80.64615132728282,
                            'point_b_latitude': 49.93702589972641})
@@ -266,6 +276,14 @@ def test_most_common_service_in_bounding_box_malformed_coordinate_params(client:
 
 
 def test_most_common_service_in_bounding_box_missing_coordinate_params(client: TestClient) -> None:
+    r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
+                   params={'date': '',
+                           'point_a_longitude': 80.64615132728282,
+                           'point_a_latitude': 40.93702589972641,
+                           'point_b_longitude': 80.64615132728282,
+                           'point_b_latitude': 49.93702589972641})
+    assert r.status_code == 422
+
     r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
                    params={'point_a_longitude': '',
                            'point_a_latitude': 40.93702589972641,
