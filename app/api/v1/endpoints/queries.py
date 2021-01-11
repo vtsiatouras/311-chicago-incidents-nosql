@@ -187,7 +187,7 @@ def three_least_common_wards(
     return list(cursor)
 
 
-@router.get('/average-completion-time-per-request', response_model=Any)
+@router.get('/average-completion-time-per-request', response_model=List[AverageCompletionTime])
 def average_completion_time_per_request(
         start_date: datetime,
         end_date: datetime,
@@ -237,3 +237,48 @@ def average_completion_time_per_request(
         result.append(elem)
     return result
 
+
+@router.get('/most-common-service-in-bounding-box', response_model=Any)
+def most_common_service_in_bounding_box(
+        point_a_longitude: float,
+        point_a_latitude: float,
+        point_b_longitude: float,
+        point_b_latitude: float,
+        db: Database = Depends(get_db)
+) -> Any:
+    """ Find the most common service request in a specified bounding box for a specific day.
+    """
+    cursor = db['incidents'].aggregate([
+        {
+            '$match': {
+                'geo_location.coordinates': {
+                    '$geoWithin': {
+                        '$box': [
+                            [point_a_longitude, point_a_latitude],
+                            [point_b_longitude, point_b_latitude]
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            '$project': {
+                'type_of_service_request': 1
+            }
+        },
+        {
+            '$group': {
+                '_id': '$type_of_service_request',
+                'count': {'$sum': 1}
+            }
+        },
+        {
+            '$sort': {
+                'count': -1
+            }
+        },
+        {
+            '$limit': 1
+        }
+    ])
+    return list(cursor)
