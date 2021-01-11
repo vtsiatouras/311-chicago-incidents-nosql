@@ -108,3 +108,8 @@ class ZipCodeTop3(BaseModel):
 
     class Config:
         allow_population_by_field_name = True
+
+
+class AverageCompletionTime(BaseModel):
+    type_of_request: str = Field(alias='_id')
+    average_completion_time: str

@@ -2,3 +2,4 @@
 omit = /usr/*
        *__init__*
        *scripts*
+       *data_import.py*

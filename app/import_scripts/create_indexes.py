@@ -8,6 +8,7 @@ def create_indexes():
     db['incidents'].create_index([('type_of_service_request', pymongo.ASCENDING)])
     db['incidents'].create_index([('creation_date', pymongo.ASCENDING)])
     db['incidents'].create_index([('type_of_service_request', pymongo.ASCENDING), ('creation_date', pymongo.ASCENDING)])
+    db['incidents'].create_index([('geo_location', pymongo.GEO2D)])
 
 
 if __name__ == '__main__':
