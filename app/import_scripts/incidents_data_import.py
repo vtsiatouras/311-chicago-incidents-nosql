@@ -264,7 +264,10 @@ def __dataframe_normalization__(df: pd.DataFrame, request_type: str) -> pd.DataF
     df['completion_date'] = df['completion_date'].astype(object).where(df['completion_date'].notnull(), None)
 
     for index in df.index:
-        df.at[index, 'geo_location'] = {'type': 'Point',
-                                        'coordinates': [df.at[index, 'longitude'], df.at[index, 'latitude']]}
+        if df.at[index, 'longitude'] and df.at[index, 'latitude']:
+            df.at[index, 'geo_location'] = {'type': 'Point',
+                                            'coordinates': [df.at[index, 'longitude'], df.at[index, 'latitude']]}
+        else:
+            df.at[index, 'geo_location'] = None
 
     return df
