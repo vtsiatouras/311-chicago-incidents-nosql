@@ -6,7 +6,7 @@ from faker import Faker
 from app.db.db_connection import get_db
 
 
-NUMBER_OF_CITIZENS = 500000
+NUMBER_OF_CITIZENS = 80000
 MAX_VOTES_PER_CITIZEN = 1000
 
 
@@ -97,24 +97,38 @@ def create_up_votes() -> None:
             if ward:
                 wards.add(ward)
 
-        citizen.update({'total_votes': len(votes_list[it])})
         citizen.update({'voted_incidents': list(votes_list[it])})
+        citizen.update({'total_votes': len(votes_list[it])})
         citizen.update({'wards': list(wards)})
+        citizen.update({'total_wards': len(wards)})
 
         it += 1
 
     db = next(get_db())
     db['citizens'].insert_many(citizens)
 
-    # Assign votes to incidents
+    # Fetch citizen data
     citizens_docs = db['citizens'].find({})
+
+    # Create a dictionary that associates Incident ObjectIds with Citizen ObjectIds
+    votes_per_incident = dict()
     for citizen_doc in citizens_docs:
-        incidents = citizen_doc['voted_incidents']
+        voted_incidents = citizen_doc['voted_incidents']
+        for voted_incident in voted_incidents:
+            try:
+                votes_per_incident[voted_incident].append(citizen_doc['_id'])
+            except KeyError:
+                votes_per_incident[voted_incident] = [citizen_doc['_id']]
+
+    # Assign votes to incidents
+    for incident_id, citizens_ids in votes_per_incident.items():
         db['incidents'].update_many(
-            {'_id': {'$in': incidents}},
+            {'_id': incident_id},
             {
-                '$inc': {'total_votes': 1},
-                '$push': {'voted_by': citizen_doc['_id']},
+                '$set': {
+                    'total_votes': len(citizens_ids),
+                    'voted_by': citizens_ids
+                }
             },
             upsert=False
         )
