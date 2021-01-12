@@ -221,5 +221,5 @@ mock_citizen_docs = [{"_id": ObjectId("5ffdf8750d58d021a3b432e7"),
                       "voted_incidents": [ObjectId("5ffdf6fe0d58d021a39b2f15"), ObjectId("5ffdf8750d58d021a3b43216"),
                                           ObjectId("5ffdf8750d58d021a3b43217"), ObjectId("5ffdf8750d58d021a3b43218")],
                       "total_votes": 26,
-                      "wards": [47, 48, 49, 45], "total_wards": 5}
+                      "wards": [47, 48, 49, 45], "total_wards": 4}
                      ]

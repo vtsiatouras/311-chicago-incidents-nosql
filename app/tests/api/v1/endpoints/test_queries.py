@@ -344,3 +344,11 @@ def test_top_fifty_upvoted_requests_malformed_date_param(client: TestClient) -> 
     r = client.get(f"{settings.API_V1_STR}/top-fifty-upvoted-requests",
                    params={'date': ''})
     assert r.status_code == 422
+
+
+def test_top_fifty_active_citizens(client: TestClient) -> None:
+    r = client.get(f"{settings.API_V1_STR}/top-fifty-active-citizens")
+    response = r.json()
+    assert response == [{'_id': '5ffdf8750d58d021a3b432e9', 'total_votes': 26},
+                        {'_id': '5ffdf8750d58d021a3b432e8', 'total_votes': 9},
+                        {'_id': '5ffdf8750d58d021a3b432e7', 'total_votes': 3}]
