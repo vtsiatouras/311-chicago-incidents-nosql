@@ -270,4 +270,7 @@ def __dataframe_normalization__(df: pd.DataFrame, request_type: str) -> pd.DataF
         else:
             df.at[index, 'geo_location'] = None
 
+    df = df.drop('latitude', 1)
+    df = df.drop('longitude', 1)
+
     return df
