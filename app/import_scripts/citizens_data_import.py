@@ -1,30 +1,32 @@
 import random
 
-from typing import List
+from typing import List, Tuple
 from faker import Faker
 
 from app.db.db_connection import get_db
 
 
-NUMBER_OF_CITIZENS = 40000
+NUMBER_OF_CITIZENS = 500000
 MAX_VOTES_PER_CITIZEN = 1000
 
 
-def fetch_random_incident_object_ids(number_of_incidents: int) -> List[str]:
+def fetch_random_incident_object_ids(number_of_incidents: int) -> Tuple[List[str], dict]:
     """ Fetches random ObjectIds
 
     :param number_of_incidents: Define the total of the unique incidents ids to fetch
-    :return List of ObjectIds
+    :return List of ObjectIds and a dictionary with ObjectIds wards pairs
     """
     db = next(get_db())
     incidents = set()
+    object_ids_with_wards = dict()
     while len(incidents) < number_of_incidents:
-        incidents_cur = db['incidents'].aggregate([{'$sample': {'size': 100000}},
-                                                   {'$project': {'_id': 1}}])
+        incidents_cur = db['incidents'].aggregate([{'$sample': {'size': 50000}},
+                                                   {'$project': {'_id': 1, 'ward': 1}}])
         for incident in incidents_cur:
-            incidents.add(incident['_id'])
+            object_ids_with_wards.update({incident.get('_id'): incident.get('ward')})
+            incidents.add(incident.get('_id'))
 
-    return list(incidents)
+    return list(incidents), object_ids_with_wards
 
 
 def create_rng_citizens(number_of_citizens: int) -> List[dict]:
@@ -44,7 +46,7 @@ def create_rng_citizens(number_of_citizens: int) -> List[dict]:
     return citizens
 
 
-def list_random_chunks(elements_list: list, number_of_chunks: int, max_size: int = MAX_VOTES_PER_CITIZEN) -> list:
+def list_random_chunks(elements_list: list, number_of_chunks: int, max_size: int = MAX_VOTES_PER_CITIZEN) -> List:
     """ Method that initially shuffles the elements of a list and splits it into random sized chunks
 
     :param elements_list: The list to split
@@ -52,7 +54,7 @@ def list_random_chunks(elements_list: list, number_of_chunks: int, max_size: int
     :param max_size: The max size of a chunk
     :return: A list that contains random sized chunks
     """
-    chunks = [[] for _ in range(number_of_chunks)]
+    chunks = [set() for _ in range(number_of_chunks)]
 
     # Generate the max sizes of each chunk
     chunks_sizes = list()
@@ -63,17 +65,14 @@ def list_random_chunks(elements_list: list, number_of_chunks: int, max_size: int
 
     # Assign all elements of the list at least one time to the chunks
     for it, element in enumerate(elements_list):
-        chunks[it % number_of_chunks] += [element]
+        chunks[it % number_of_chunks].add(element)
 
     # Fill up chunks based on the random sizes that generated above
     it = 0
     for chunk in chunks:
         chunk_size = chunks_sizes[it]
         while len(chunk) < chunk_size:
-            random_value = elements_list[random.randint(1, len(elements_list) - 1)]
-            if random_value in chunk:
-                continue
-            chunk += [random_value]
+            chunk.add(elements_list[random.randint(1, len(elements_list) - 1)])
         it += 1
 
     return chunks
@@ -84,15 +83,24 @@ def create_up_votes() -> None:
 
     :return: None
     """
-    incident_ids = fetch_random_incident_object_ids(number_of_incidents=2000000)
+    incident_ids, object_ids_with_wards = fetch_random_incident_object_ids(number_of_incidents=2000000)
     citizens = create_rng_citizens(number_of_citizens=NUMBER_OF_CITIZENS)
     votes_list = list_random_chunks(elements_list=incident_ids, number_of_chunks=NUMBER_OF_CITIZENS)
 
     # Assign votes to citizens
     it = 0
     for citizen in citizens:
+
+        wards = set()
+        for vote in votes_list[it]:
+            ward = object_ids_with_wards.get(vote)
+            if ward:
+                wards.add(ward)
+
         citizen.update({'total_votes': len(votes_list[it])})
-        citizen.update({'voted_incidents': votes_list[it]})
+        citizen.update({'voted_incidents': list(votes_list[it])})
+        citizen.update({'wards': list(wards)})
+
         it += 1
 
     db = next(get_db())
