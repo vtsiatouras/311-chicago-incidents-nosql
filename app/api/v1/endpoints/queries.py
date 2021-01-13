@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 from app.db.db_connection import get_db
 from app.models.models import FieldWithCount, ZipCodeTop3, AverageCompletionTime, ObjectIdWithTotalVotes, \
-    ObjectIdWithTotalWards, IncidentID, PhoneNumberIncidents
+    ObjectIdWithTotalWards, IncidentID, PhoneNumberIncidents, CitizenWards
 from app.schemas.schemas import TypeOfServiceRequest
 
 router = APIRouter()
@@ -420,6 +420,30 @@ def phone_number_incidents(
                         "in": {"$setUnion": ["$$this", "$$value"]}
                     }
                 }
+            }
+        }
+    ])
+    return list(cursor)
+
+
+@router.get('/citizen-wards', response_model=List[CitizenWards])
+def citizen_wards(
+        name: str,
+        db: Database = Depends(get_db)
+) -> Any:
+    """ Find all incident ids for which the same telephone number has been used for more than one
+    names.
+    """
+    cursor = db['citizens'].aggregate([
+        {
+            '$match': {
+                'name': name
+            }
+        },
+        {
+            '$project': {
+                '_id': '$name',
+                'wards': 1
             }
         }
     ])

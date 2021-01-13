@@ -153,3 +153,8 @@ class PhoneNumberIncidents(BaseModel):
         json_encoders = {
             ObjectId: str
         }
+
+
+class CitizenWards(BaseModel):
+    name: Any = Field(alias='_id')
+    wards: List[int]
