@@ -16,7 +16,7 @@ class PyObjectId(ObjectId):
     @classmethod
     def validate(cls, v):
         if not ObjectId.is_valid(v):
-            raise ValueError('Invalid objectid')
+            raise ValueError('Invalid ObjectId')
         return ObjectId(v)
 
     @classmethod
@@ -92,22 +92,30 @@ class Citizen(BaseModel):
         }
 
 
+class ObjectIdWithTotalVotes(BaseModel):
+    id: PyObjectId = Field(alias='_id')
+    total_votes: Optional[int]
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {
+            ObjectId: str
+        }
+
+
 class FieldWithCount(BaseModel):
     id: Any = Field(alias='_id')
     count: int
 
 
-class Top3(BaseModel):
+class RequestCount(BaseModel):
     type_of_service_request: str
     count: int
 
 
 class ZipCodeTop3(BaseModel):
     zip_code: Any = Field(alias='_id')
-    top_three: List[Top3]
-
-    class Config:
-        allow_population_by_field_name = True
+    top_three: List[RequestCount]
 
 
 class AverageCompletionTime(BaseModel):

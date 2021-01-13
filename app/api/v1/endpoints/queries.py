@@ -4,7 +4,7 @@ from pymongo.database import Database
 from datetime import datetime, timedelta
 
 from app.db.db_connection import get_db
-from app.models.models import FieldWithCount, ZipCodeTop3, AverageCompletionTime
+from app.models.models import FieldWithCount, ZipCodeTop3, AverageCompletionTime, ObjectIdWithTotalVotes
 from app.schemas.schemas import TypeOfServiceRequest
 
 router = APIRouter()
@@ -238,7 +238,7 @@ def average_completion_time_per_request(
     return result
 
 
-@router.get('/most-common-service-in-bounding-box', response_model=Any)
+@router.get('/most-common-service-in-bounding-box', response_model=List[FieldWithCount])
 def most_common_service_in_bounding_box(
         date: datetime,
         point_a_longitude: float,
@@ -285,6 +285,62 @@ def most_common_service_in_bounding_box(
         },
         {
             '$limit': 1
+        }
+    ])
+    return list(cursor)
+
+
+@router.get('/top-fifty-upvoted-requests', response_model=List[ObjectIdWithTotalVotes])
+def top_fifty_upvoted_requests(
+        date: datetime,
+        db: Database = Depends(get_db)
+) -> Any:
+    """ Find the fifty most upvoted service requests for a specific day.
+    """
+    cursor = db['incidents'].aggregate([
+        {
+            '$match': {
+                'creation_date': date
+            }
+        },
+        {
+            '$project': {
+                '_id': 1,
+                'total_votes': 1
+            }
+        },
+        {
+            '$sort': {
+                'total_votes': -1
+            }
+        },
+        {
+            '$limit': 50
+        }
+    ])
+    return list(cursor)
+
+
+@router.get('/top-fifty-active-citizens', response_model=List[ObjectIdWithTotalVotes])
+def top_fifty_active_citizens(
+        db: Database = Depends(get_db)
+) -> Any:
+    """ Find the fifty most active citizens, with regard to the total number of upvotes.
+    """
+    cursor = db['citizens'].aggregate([
+        {
+            '$project': {
+                '_id': 1,
+                'total_votes': 1
+            }
+        },
+        {
+            '$sort': {
+                'total_votes': -1
+            }
+        },
+        {
+            '$limit': 50
         }
     ])
     return list(cursor)

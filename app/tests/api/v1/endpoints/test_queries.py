@@ -147,7 +147,7 @@ def test_three_most_common_requests_per_zipcode_malformed_date_param(client: Tes
     assert r.status_code == 422
 
     r = client.get(f"{settings.API_V1_STR}/three-most-common-requests-per-zipcode",
-                   params={'start_date': ''})
+                   params={'date': ''})
     assert r.status_code == 422
 
 
@@ -162,7 +162,7 @@ def test_three_least_common_wards(client: TestClient) -> None:
     r = client.get(f"{settings.API_V1_STR}/three-least-common-wards",
                    params={'request_type': 'STREET_ONE_LIGHT'})
     response = r.json()
-    assert response == [{'_id': 45, 'count': 2}]
+    assert response == [{'_id': 45, 'count': 1}, {'_id': 46, 'count': 1}]
 
     r = client.get(f"{settings.API_V1_STR}/three-least-common-wards",
                    params={'request_type': 'STREET_ALL_LIGHTS'})
@@ -311,3 +311,44 @@ def test_most_common_service_in_bounding_box_missing_coordinate_params(client: T
                            'point_b_longitude': 49.93702589972641,
                            'point_b_latitude': ''})
     assert r.status_code == 422
+
+
+def test_top_fifty_upvoted_requests(client: TestClient) -> None:
+    r = client.get(f"{settings.API_V1_STR}/top-fifty-upvoted-requests",
+                   params={'date': '2015-05-08T00:00:00'})
+    response = r.json()
+    assert response == [{'_id': '5ffdf8750d58d021a3b43219', 'total_votes': 9},
+                        {'_id': '5ffdf8750d58d021a3b43218', 'total_votes': 8},
+                        {'_id': '5ffdf8750d58d021a3b43217', 'total_votes': 7},
+                        {'_id': '5ffdf8750d58d021a3b43216', 'total_votes': 6},
+                        {'_id': '5ffdf8750d58d021a3b43214', 'total_votes': 5},
+                        {'_id': '5ffdf8750d58d021a3b43213', 'total_votes': 4},
+                        {'_id': '5ffdf8750d58d021a3b43211', 'total_votes': 3},
+                        {'_id': '5ffdf8750d58d021a3b43215', 'total_votes': 2},
+                        {'_id': '5ffdf8750d58d021a3b43212', 'total_votes': 1},
+                        {'_id': '5ffdf8750d58d021a3b43220', 'total_votes': None},
+                        {'_id': '5ffdf8750d58d021a3b43221', 'total_votes': None}]
+
+    r = client.get(f"{settings.API_V1_STR}/top-fifty-upvoted-requests",
+                   params={'date': '2020-05-08T00:00:00'})
+    response = r.json()
+
+    assert response == []
+
+
+def test_top_fifty_upvoted_requests_malformed_date_param(client: TestClient) -> None:
+    r = client.get(f"{settings.API_V1_STR}/top-fifty-upvoted-requests",
+                   params={'date': '00:00:00'})
+    assert r.status_code == 422
+
+    r = client.get(f"{settings.API_V1_STR}/top-fifty-upvoted-requests",
+                   params={'date': ''})
+    assert r.status_code == 422
+
+
+def test_top_fifty_active_citizens(client: TestClient) -> None:
+    r = client.get(f"{settings.API_V1_STR}/top-fifty-active-citizens")
+    response = r.json()
+    assert response == [{'_id': '5ffdf8750d58d021a3b432e9', 'total_votes': 26},
+                        {'_id': '5ffdf8750d58d021a3b432e8', 'total_votes': 9},
+                        {'_id': '5ffdf8750d58d021a3b432e7', 'total_votes': 3}]
