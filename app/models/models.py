@@ -103,6 +103,17 @@ class ObjectIdWithTotalVotes(BaseModel):
         }
 
 
+class ObjectIdWithTotalWards(BaseModel):
+    id: PyObjectId = Field(alias='_id')
+    total_wards: Optional[int]
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {
+            ObjectId: str
+        }
+
+
 class FieldWithCount(BaseModel):
     id: Any = Field(alias='_id')
     count: int

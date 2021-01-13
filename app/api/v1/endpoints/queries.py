@@ -4,7 +4,8 @@ from pymongo.database import Database
 from datetime import datetime, timedelta
 
 from app.db.db_connection import get_db
-from app.models.models import FieldWithCount, ZipCodeTop3, AverageCompletionTime, ObjectIdWithTotalVotes
+from app.models.models import FieldWithCount, ZipCodeTop3, AverageCompletionTime, ObjectIdWithTotalVotes, \
+    ObjectIdWithTotalWards
 from app.schemas.schemas import TypeOfServiceRequest
 
 router = APIRouter()
@@ -337,6 +338,32 @@ def top_fifty_active_citizens(
         {
             '$sort': {
                 'total_votes': -1
+            }
+        },
+        {
+            '$limit': 50
+        }
+    ])
+    return list(cursor)
+
+
+@router.get('/top-fifty-wards-citizens', response_model=List[ObjectIdWithTotalWards])
+def top_fifty_wards_citizens(
+        db: Database = Depends(get_db)
+) -> Any:
+    """ Find the top fifty citizens, with regard to the total number of wards for which they have
+    upvoted an incidents.
+    """
+    cursor = db['citizens'].aggregate([
+        {
+            '$project': {
+                '_id': 1,
+                'total_wards': 1
+            }
+        },
+        {
+            '$sort': {
+                'total_wards': -1
             }
         },
         {
