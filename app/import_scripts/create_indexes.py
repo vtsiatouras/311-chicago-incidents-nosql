@@ -14,6 +14,7 @@ def create_indexes():
     db['citizens'].create_index([('total_votes', pymongo.ASCENDING)])
     db['citizens'].create_index([('total_wards', pymongo.ASCENDING)])
     db['citizens'].create_index([('telephone_number', pymongo.ASCENDING)])
+    db['citizens'].create_index([('name', pymongo.ASCENDING)])
 
 
 if __name__ == '__main__':
