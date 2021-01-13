@@ -79,6 +79,16 @@ class Incident(BaseModel):
         }
 
 
+class IncidentID(BaseModel):
+    id: Optional[PyObjectId] = Field(alias='_id')
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {
+            ObjectId: str
+        }
+
+
 class Citizen(BaseModel):
     id: Optional[PyObjectId] = Field(alias='_id')
     name: str
@@ -95,6 +105,17 @@ class Citizen(BaseModel):
 class ObjectIdWithTotalVotes(BaseModel):
     id: PyObjectId = Field(alias='_id')
     total_votes: Optional[int]
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {
+            ObjectId: str
+        }
+
+
+class ObjectIdWithTotalWards(BaseModel):
+    id: PyObjectId = Field(alias='_id')
+    total_wards: Optional[int]
 
     class Config:
         arbitrary_types_allowed = True
@@ -121,3 +142,19 @@ class ZipCodeTop3(BaseModel):
 class AverageCompletionTime(BaseModel):
     type_of_request: str = Field(alias='_id')
     average_completion_time: str
+
+
+class PhoneNumberIncidents(BaseModel):
+    phone_number: Any = Field(alias='_id')
+    incident_ids: List[PyObjectId]
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {
+            ObjectId: str
+        }
+
+
+class CitizenWards(BaseModel):
+    name: Any = Field(alias='_id')
+    wards: List[int]
