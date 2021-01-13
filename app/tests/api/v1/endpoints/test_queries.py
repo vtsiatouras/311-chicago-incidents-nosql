@@ -360,3 +360,12 @@ def test_top_fifty_wards_citizens(client: TestClient) -> None:
     assert response == [{'_id': '5ffdf8750d58d021a3b432e8', 'total_wards': 5},
                         {'_id': '5ffdf8750d58d021a3b432e9', 'total_wards': 4},
                         {'_id': '5ffdf8750d58d021a3b432e7', 'total_wards': 2}]
+
+
+def test_phone_number_incidents(client: TestClient) -> None:
+    # NotImplementedError: Although '$reduce' is a valid array operator for the aggregation pipeline, it is currently
+    # not implemented in Mongomock.
+    # r = client.get(f"{settings.API_V1_STR}/phone-number-incidents")
+    # response = r.json()
+    # assert response == []
+    assert True

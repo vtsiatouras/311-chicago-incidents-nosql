@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 from app.db.db_connection import get_db
 from app.models.models import FieldWithCount, ZipCodeTop3, AverageCompletionTime, ObjectIdWithTotalVotes, \
-    ObjectIdWithTotalWards
+    ObjectIdWithTotalWards, IncidentID, PhoneNumberIncidents
 from app.schemas.schemas import TypeOfServiceRequest
 
 router = APIRouter()
@@ -116,7 +116,7 @@ def three_most_common_requests_per_zipcode(
                 'zip_code': 1
             }
         },
-        {   # Create counts per type and zipcode
+        {  # Create counts per type and zipcode
             '$group': {
                 '_id': {
                     'type_of_service_request': '$type_of_service_request',
@@ -130,7 +130,7 @@ def three_most_common_requests_per_zipcode(
                 '_id.zip_code': 1, 'count': -1
             }
         },
-        {   # Group types & counts per zipcode inside an array
+        {  # Group types & counts per zipcode inside an array
             '$group': {
                 '_id': '$_id.zip_code',
                 'counts': {
@@ -141,7 +141,7 @@ def three_most_common_requests_per_zipcode(
                 }
             }
         },
-        {    # Select first 3 elements of each array
+        {  # Select first 3 elements of each array
             '$project': {
                 'top_three': {'$slice': ['$counts', 3]}}
         }
@@ -161,7 +161,7 @@ def three_least_common_wards(
             '$match': {
                 '$and': [
                     {'type_of_service_request': request_type},
-                    {'ward': {'$exists': 'true'}}       # Exclude records with no ward
+                    {'ward': {'$exists': 'true'}}  # Exclude records with no ward
                 ]
             }
         },
@@ -224,7 +224,7 @@ def average_completion_time_per_request(
                     }
                 }
             }
-         },
+        },
         {
             '$sort': {
                 '_id': 1
@@ -368,6 +368,59 @@ def top_fifty_wards_citizens(
         },
         {
             '$limit': 50
+        }
+    ])
+    return list(cursor)
+
+
+@router.get('/phone-number-incidents', response_model=List[PhoneNumberIncidents])
+def phone_number_incidents(
+        db: Database = Depends(get_db)
+) -> Any:
+    """ Find all incident ids for which the same telephone number has been used for more than one
+    names.
+    """
+    cursor = db['citizens'].aggregate([
+        {
+            '$group': {
+                '_id': '$telephone_number',
+                'citizen_ids': {'$push': '$_id'},
+                'count': {'$sum': 1}
+            }
+        },
+        {   # If a phone number appears more than once
+            '$match': {
+                '_id': {'$ne': 'null'},
+                'count': {'$gt': 1}
+            }
+        },
+        {   # "Self Join' to citizens collection with the IDs we retrieved above
+            '$lookup': {
+                'from': 'citizens',
+                'localField': 'citizen_ids',
+                'foreignField': '_id',
+                'as': 'same_phone_citizens'
+            }
+        },
+        {   # Expand joined array to documents
+            '$unwind': '$same_phone_citizens'
+        },
+        {   # Group by _id (phone number) and append incident IDs to array
+            '$group': {
+                '_id': '$_id',
+                'incidents': {'$push': '$same_phone_citizens.voted_incidents'},
+            }
+        },
+        {   # Deduplicate incident IDs using reduce
+            '$project': {
+                'incident_ids': {
+                    '$reduce': {
+                        'input': '$incidents',
+                        "initialValue": [],
+                        "in": {"$setUnion": ["$$this", "$$value"]}
+                    }
+                }
+            }
         }
     ])
     return list(cursor)
