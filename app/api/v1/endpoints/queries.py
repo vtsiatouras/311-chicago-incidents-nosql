@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 from app.db.db_connection import get_db
 from app.models.models import FieldWithCount, ZipCodeTop3, AverageCompletionTime, ObjectIdWithTotalVotes, \
-    ObjectIdWithTotalWards, IncidentID, PhoneNumberIncidents, CitizenWards
+    ObjectIdWithTotalWards, PhoneNumberIncidents, CitizenWards
 from app.schemas.schemas import TypeOfServiceRequest
 
 router = APIRouter()
