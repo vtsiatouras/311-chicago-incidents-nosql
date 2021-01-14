@@ -14,15 +14,29 @@ def client() -> Generator:
         yield c
 
 
-def override_db_conn_empty():
-    mock_client = mongomock.MongoClient()
-    mock_db = mock_client['incidents_test_db']
-    return mock_db
+mock_client = mongomock.MongoClient()
+mock_db_empty = mock_client['incidents_test_db_empty']
+mock_db_loaded = mock_client['incidents_test_db_loaded']
+
+
+@pytest.fixture()
+def db_empty_fixture():
+    mock_db_empty.drop_collection('incidents')
+    mock_db_empty.drop_collection('citizens')
+
+
+@pytest.fixture(scope='function', autouse=True)
+def db_loaded_fixture():
+    mock_db_loaded['incidents'].insert_many(mock_incident_docs)
+    mock_db_loaded['citizens'].insert_many(mock_citizen_docs)
+    yield mock_db_loaded
+    mock_db_loaded.drop_collection('incidents')
+    mock_db_loaded.drop_collection('citizens')
+
+
+def override_db_conn_static_empty():
+    return mock_db_empty
 
 
 def override_db_conn_with_data():
-    mock_client = mongomock.MongoClient()
-    mock_db = mock_client['incidents_test_db']
-    mock_db['incidents'].insert_many(mock_incident_docs)
-    mock_db['citizens'].insert_many(mock_citizen_docs)
-    return mock_db
+    return mock_db_loaded

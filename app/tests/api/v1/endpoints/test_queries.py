@@ -5,10 +5,9 @@ from app.db.db_connection import get_db
 from app.main import app
 from ....conftest import override_db_conn_with_data
 
-app.dependency_overrides[get_db] = override_db_conn_with_data
-
 
 def test_total_requests_per_type(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/total-requests-per-type",
                    params={'start_date': '2014-04-09T00:00:00', 'end_date': '2017-04-09T00:00:00'})
     response = r.json()
@@ -23,6 +22,7 @@ def test_total_requests_per_type(client: TestClient) -> None:
 
 
 def test_total_requests_per_type_malformed_date_params(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/total-requests-per-type",
                    params={'start_date': '00:00:00', 'end_date': '2017-04-09T00:00:00'})
     assert r.status_code == 422
@@ -44,12 +44,14 @@ def test_total_requests_per_type_malformed_date_params(client: TestClient) -> No
 
 
 def test_total_requests_per_type_start_date_greater_than_end_date(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/total-requests-per-type",
                    params={'start_date': '2017-04-09T00:00:00', 'end_date': '2014-04-09T00:00:00'})
     assert r.status_code == 422
 
 
 def test_total_requests_per_day(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/total-requests-per-day",
                    params={'start_date': '2014-04-09T00:00:00', 'end_date': '2017-04-09T00:00:00',
                            'request_type': 'ABANDONED_VEHICLE'})
@@ -79,6 +81,7 @@ def test_total_requests_per_day(client: TestClient) -> None:
 
 
 def test_total_requests_per_day_malformed_date_params(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/total-requests-per-day",
                    params={'start_date': '00:00:00', 'end_date': '2017-04-09T00:00:00', 'request_type': 'GRAFFITI'})
     assert r.status_code == 422
@@ -102,6 +105,7 @@ def test_total_requests_per_day_malformed_date_params(client: TestClient) -> Non
 
 
 def test_total_requests_per_day_start_date_greater_than_end_date(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/total-requests-per-day",
                    params={'start_date': '2017-04-09T00:00:00', 'end_date': '2014-04-09T00:00:00',
                            'request_type': 'GRAFFITI'})
@@ -109,6 +113,7 @@ def test_total_requests_per_day_start_date_greater_than_end_date(client: TestCli
 
 
 def test_total_requests_per_request_type_param(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     param_types = ['ABANDONED_VEHICLE', 'ALLEY_LIGHTS', 'GRAFFITI', 'GARBAGE', 'POTHOLE', 'RODENT_BAITING',
                    'SANITATION_VIOLATION', 'STREET_ONE_LIGHT', 'STREET_ALL_LIGHTS', 'TREE_TRIM', 'TREE_DEBRIS']
     for param in param_types:
@@ -119,6 +124,7 @@ def test_total_requests_per_request_type_param(client: TestClient) -> None:
 
 
 def test_total_requests_per_request_malformed_type_param(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/total-requests-per-day",
                    params={'start_date': '2013-04-09T00:00:00', 'end_date': '2014-04-09T00:00:00',
                            'request_type': 'ASDF'})
@@ -131,6 +137,7 @@ def test_total_requests_per_request_malformed_type_param(client: TestClient) -> 
 
 
 def test_three_most_common_requests_per_zipcode(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/three-most-common-requests-per-zipcode",
                    params={'date': '2015-05-08T00:00:00'})
     response = r.json()
@@ -142,6 +149,7 @@ def test_three_most_common_requests_per_zipcode(client: TestClient) -> None:
 
 
 def test_three_most_common_requests_per_zipcode_malformed_date_param(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/three-most-common-requests-per-zipcode",
                    params={'date': '00:00:00'})
     assert r.status_code == 422
@@ -152,6 +160,7 @@ def test_three_most_common_requests_per_zipcode_malformed_date_param(client: Tes
 
 
 def test_three_least_common_wards(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/three-least-common-wards",
                    params={'request_type': 'ABANDONED_VEHICLE'})
     response = r.json()
@@ -171,6 +180,7 @@ def test_three_least_common_wards(client: TestClient) -> None:
 
 
 def test_three_least_common_wards_malformed_type_param(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/three-least-common-wards",
                    params={'request_type': 'ASDF'})
     assert r.status_code == 422
@@ -181,6 +191,7 @@ def test_three_least_common_wards_malformed_type_param(client: TestClient) -> No
 
 
 def test_average_completion_time_per_request(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/average-completion-time-per-request",
                    params={'start_date': '2014-04-09T00:00:00', 'end_date': '2017-04-09T00:00:00'})
     response = r.json()
@@ -197,6 +208,7 @@ def test_average_completion_time_per_request(client: TestClient) -> None:
 
 
 def test_average_completion_time_per_request_malformed_date_params(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/average-completion-time-per-request",
                    params={'start_date': '00:00:00', 'end_date': '2017-04-09T00:00:00'})
     assert r.status_code == 422
@@ -220,6 +232,7 @@ def test_average_completion_time_per_request_malformed_date_params(client: TestC
 
 def test_most_common_service_in_bounding_box(client: TestClient) -> None:
     # NotImplementedError: '$geoWithin' is a valid operation but it is not supported by Mongomock yet. :(
+    # app.dependency_overrides[get_db] = override_db_conn_with_data
     # r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
     #                params={'date': '2015-04-09T00:00:00',
     #                        'point_a_longitude': -88.64615132728282,
@@ -237,6 +250,7 @@ def test_most_common_service_in_bounding_box(client: TestClient) -> None:
 
 
 def test_most_common_service_in_bounding_box_malformed_coordinate_params(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
                    params={'date': '2015-04-09T00:00:00asdf',
                            'point_a_longitude': -88.64615132728282,
@@ -276,6 +290,7 @@ def test_most_common_service_in_bounding_box_malformed_coordinate_params(client:
 
 
 def test_most_common_service_in_bounding_box_missing_coordinate_params(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/most-common-service-in-bounding-box",
                    params={'date': '',
                            'point_a_longitude': 80.64615132728282,
@@ -314,6 +329,7 @@ def test_most_common_service_in_bounding_box_missing_coordinate_params(client: T
 
 
 def test_top_fifty_upvoted_requests(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/top-fifty-upvoted-requests",
                    params={'date': '2015-05-08T00:00:00'})
     response = r.json()
@@ -337,6 +353,7 @@ def test_top_fifty_upvoted_requests(client: TestClient) -> None:
 
 
 def test_top_fifty_upvoted_requests_malformed_date_param(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/top-fifty-upvoted-requests",
                    params={'date': '00:00:00'})
     assert r.status_code == 422
@@ -347,6 +364,7 @@ def test_top_fifty_upvoted_requests_malformed_date_param(client: TestClient) -> 
 
 
 def test_top_fifty_active_citizens(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/top-fifty-active-citizens")
     response = r.json()
     assert response == [{'_id': '5ffdf8750d58d021a3b432e8', 'total_votes': 9},
@@ -356,6 +374,7 @@ def test_top_fifty_active_citizens(client: TestClient) -> None:
 
 
 def test_top_fifty_wards_citizens(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/top-fifty-wards-citizens")
     response = r.json()
     assert response == [{'_id': '5ffdf8750d58d021a3b432e8', 'total_wards': 5},
@@ -367,6 +386,7 @@ def test_top_fifty_wards_citizens(client: TestClient) -> None:
 def test_phone_number_incidents(client: TestClient) -> None:
     # NotImplementedError: Although '$reduce' is a valid array operator for the aggregation pipeline, it is currently
     # not implemented in Mongomock.
+    # app.dependency_overrides[get_db] = override_db_conn_with_data
     # r = client.get(f"{settings.API_V1_STR}/phone-number-incidents")
     # response = r.json()
     # assert response == []
@@ -374,6 +394,7 @@ def test_phone_number_incidents(client: TestClient) -> None:
 
 
 def test_citizen_wards(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/citizen-wards", params={'name': 'Mary Stewart'})
     response = r.json()
     assert response == [{'_id': 'Mary Stewart', 'wards': [47, 48, 49, 45]}, {'_id': 'Mary Stewart', 'wards': [46]}]
@@ -392,5 +413,6 @@ def test_citizen_wards(client: TestClient) -> None:
 
 
 def test_citizen_wards_missing_name(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
     r = client.get(f"{settings.API_V1_STR}/citizen-wards", params={})
     assert r.status_code == 422
