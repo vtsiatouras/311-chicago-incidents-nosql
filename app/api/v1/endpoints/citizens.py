@@ -7,7 +7,7 @@ from pymongo import ReturnDocument
 from pymongo.database import Database
 
 from app.db.db_connection import get_db
-from app.models.models import CitizenCreateVote, DocumentID
+from app.models.models import CitizenCreateVote, DocumentID, Citizen
 
 router = APIRouter()
 
@@ -78,3 +78,32 @@ def create_upvote(
                    }, upsert=False)
 
     return {'_id': updated_citizen['_id']}
+
+
+@router.get('/get-citizen', response_model=Citizen)
+def get_citizen(
+        citizen_id: str,
+        db: Database = Depends(get_db)
+) -> Any:
+    """ Get a citizen
+    """
+    try:
+        citizen_id_obj = ObjectId(citizen_id)
+    except InvalidId:
+        raise HTTPException(
+            status_code=422,
+            detail=f"'{citizen_id}' is not a valid citizen ID, "
+                   f"it must be a 12-byte input or a 24-character hex string",
+            headers={'X-Error': 'Validation Error'},
+        )
+
+    citizen = db['citizens'].find_one({'_id': citizen_id_obj})
+
+    if citizen:
+        return citizen
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Citizen with id '{citizen_id}' was not found",
+            headers={'X-Error': 'Not Found Error'},
+        )
