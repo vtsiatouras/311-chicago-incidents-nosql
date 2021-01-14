@@ -127,7 +127,7 @@ class IncidentCreate(BaseModel):
     nature_of_code_violation: Optional[str]
 
 
-class IncidentID(BaseModel):
+class DocumentID(BaseModel):
     id: Optional[PyObjectId] = Field(alias='_id')
 
     class Config:
@@ -142,6 +142,24 @@ class Citizen(BaseModel):
     name: str
     street_address: str
     telephone_number: str
+    voted_incidents: List[PyObjectId]
+    total_votes: int
+    wards: List[int]
+    total_wards: int
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {
+            ObjectId: str
+        }
+
+
+class CitizenCreateVote(BaseModel):
+    name: str
+    street_address: str
+    telephone_number: str
+
+    incident: PyObjectId
 
     class Config:
         arbitrary_types_allowed = True

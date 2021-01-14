@@ -6,12 +6,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from pymongo.database import Database
 
 from app.db.db_connection import get_db
-from app.models.models import Incident, IncidentCreate, IncidentID
+from app.models.models import Incident, IncidentCreate, DocumentID
 
 router = APIRouter()
 
 
-@router.post('/create-incident', response_model=IncidentID)
+@router.post('/create-incident', response_model=DocumentID)
 def create_incident(
         *,
         incident_in: IncidentCreate,
