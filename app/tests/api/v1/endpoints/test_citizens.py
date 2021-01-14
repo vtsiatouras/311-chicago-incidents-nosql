@@ -221,3 +221,23 @@ def test_create_upvote_malformed_incident_id(client: TestClient) -> None:
     }
     r = client.post(f"{settings.API_V1_STR}/create-upvote", json=citizen_data)
     assert r.status_code == 422
+
+
+def test_get_citizen(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
+    r = client.get(f"{settings.API_V1_STR}/get-citizen", params={'citizen_id': '5ffdf8750d58d021a3b432e7'})
+    citizen_from_db = r.json()
+    assert r.status_code == 200
+    assert citizen_from_db['name'] == 'Alexander Rose'
+
+
+def test_get_citizen_not_found(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
+    r = client.get(f"{settings.API_V1_STR}/get-citizen", params={'citizen_id': '8ffdf8750d58d021a3b432e7'})
+    assert r.status_code == 404
+
+
+def test_get_incident_malformed_incident_id(client: TestClient) -> None:
+    app.dependency_overrides[get_db] = override_db_conn_with_data
+    r = client.get(f"{settings.API_V1_STR}/get-citizen", params={'citizen_id': '5ffdf8750d58d021a3b432s711111'})
+    assert r.status_code == 422
