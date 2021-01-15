@@ -9,10 +9,11 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_DB}
+    command: mongod --port 27018
     ports:
-      - 27017:27017
+      - 27018:27018
     volumes:
-      - ./init_mongo_user.js:/docker-entrypoint-initdb.d/init_mongo_user.js:ro
+      - ./mongo/data:/data/db
 
   api:
     container_name: api
