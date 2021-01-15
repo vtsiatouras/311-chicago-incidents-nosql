@@ -46,8 +46,6 @@ class Incident(BaseModel):
     community_areas: Optional[int]
     ssa: Optional[int]
     census_tracts: Optional[int]
-    latitude: Optional[float]
-    longitude: Optional[float]
 
     # Abandoned Vehicles
     license_plate: Optional[str]
@@ -100,8 +98,6 @@ class IncidentCreate(BaseModel):
     community_areas: Optional[int]
     ssa: Optional[int]
     census_tracts: Optional[int]
-    latitude: Optional[float]
-    longitude: Optional[float]
 
     # Abandoned Vehicles
     license_plate: Optional[str]
