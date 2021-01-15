@@ -14,19 +14,19 @@ services:
     volumes:
       - ./init_mongo_user.js:/docker-entrypoint-initdb.d/init_mongo_user.js:ro
 
-  api:
-    container_name: api
-    build:
-      context: ./
-      dockerfile: ./Dockerfile
-    command: bash -c "uvicorn app.main:app"
-    ports:
-      - "8000:8000"
-    depends_on:
-      - mongodb
-    env_file:
-      - .env
-    environment:
-      - MONGO_DB=${MONGO_DB}
-      - MONGO_USER=${MONGO_USER}
-      - MONGO_PASSWORD=${MONGO_PASSWORD}
+#  api:
+#    container_name: api
+#    build:
+#      context: ./
+#      dockerfile: ./Dockerfile
+#    command: bash -c "uvicorn app.main:app"
+#    ports:
+#      - "8000:8000"
+#    depends_on:
+#      - mongodb
+#    env_file:
+#      - .env
+#    environment:
+#      - MONGO_DB=${MONGO_DB}
+#      - MONGO_USER=${MONGO_USER}
+#      - MONGO_PASSWORD=${MONGO_PASSWORD}
