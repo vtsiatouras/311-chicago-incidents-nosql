@@ -114,7 +114,8 @@ Initially, install [Docker Engine](https://docs.docker.com/engine/install/ubuntu
 __Set up the `.env` at the root of the repository!__
 * `MONGO_USER`: The database user
 * `MONGO_PASSWORD`: The database user password 
-* `MONGO_HOST`: `db` _The host name __must__ be `db`_
+* `MONGO_HOST`: `mongodb` _The host name __must__ be `mongodb`_
+* `MONGO_PORT`: 27018
 * `MONGO_DB`: The database name.
 
 Then just execute the following:
@@ -123,7 +124,7 @@ Then just execute the following:
 docker-compose up --build
 ```
 
-Then you have the database, the API & the Vue.js client up and running!
+Then you have the database & the API up and running!
 
 In order to perform the import of the data you can log in to the running docker container and perform the process
  manually.
@@ -135,17 +136,9 @@ docker exec -it api bash
 Now you have access to all the files of the API. __You can now run the import command as mentioned above in the Local
 Development section.__
 
-Also, it is recommended to create a superuser in order to have access to the `admin` the `swagger-documentation` pages.
+The database is exposed at mongodb://localhost:27018/
 
-Run
-```bash
-python manage.py createsuperuser
-```
-
-The database is exposed at jdbc:postgresql://localhost:5433/
-
-The API, the Swagger page and the Admin page are available to the same addresses that referred above.
-The Vue.js client is available at http://127.0.0.1:5000/
+The API & the documentation pages page are available to the same addresses that referred above.
 
 ## Database Report
 
