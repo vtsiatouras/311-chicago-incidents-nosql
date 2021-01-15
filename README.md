@@ -149,7 +149,7 @@ The below json are just a representation of the documents that are stored to the
 
 Incidents Collection
 
-```json
+```text
 {
   "_id":{"$oid":"id"},
   "creation_date":{"$date":"YYYY-MM-DDTHH:MM:SS.000Z"},
@@ -207,7 +207,7 @@ Incidents Collection
 
 Citizens Collection
 
-```json
+```text
 {
   "_id":{"$oid":"id"},
   "name":"string",
