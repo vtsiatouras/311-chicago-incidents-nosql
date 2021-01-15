@@ -20,6 +20,13 @@ jobs:
       max-parallel: 4
 
     steps:
+      - name: Creating .env file
+        run: |
+          touch .env
+          echo MONGO_USER=${{ env.MONGO_USER }} >> .env
+          echo MONGO_PASSWORD=${{ env.MONGO_PASSWORD }} >> .env
+          echo MONGO_DB=${{ env.MONGO_DB }} >> .env
+          echo MONGO_HOST=${{ env.MONGO_HOST }} >> .env
       - uses: actions/checkout@v2
       - name: Set up MongoDB
         run: |
