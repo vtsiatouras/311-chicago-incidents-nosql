@@ -23,7 +23,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Set up MongoDB
         run: |
-          ls -la
           docker-compose up --build -d mongodb
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
