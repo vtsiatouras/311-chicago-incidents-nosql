@@ -1,7 +1,7 @@
 set -e
 
-mongo --port 27018<<EOF
-use admin
+mongo --port '27018' <<EOF
+use '$MONGO_DB'
 
 db.createUser({
   user: '$MONGO_USER',
