@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Set up MongoDB
         run: |
-          docker-compose up --build -d mongodb --env-file /dev/null
+          docker-compose up --build -d mongodb
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
