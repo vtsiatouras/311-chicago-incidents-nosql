@@ -31,7 +31,6 @@ jobs:
       - name: Set up MongoDB
         run: |
           docker-compose up --build -d mongodb
-          ./init_mongo_user.sh
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
