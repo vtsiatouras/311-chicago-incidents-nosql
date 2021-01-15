@@ -1,6 +1,6 @@
 set -e
 
-mongo <<EOF
+mongo --port 27018<<EOF
 use admin
 
 db.createUser({
