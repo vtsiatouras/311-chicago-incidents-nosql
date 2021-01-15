@@ -9,6 +9,7 @@ env:
   MONGO_PASSWORD: password
   MONGO_DB: chicago_incidents_test
   MONGO_HOST: localhost
+  MONGO_PORT: 27018
 
 jobs:
   build:
@@ -21,9 +22,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Creating .env file
+        run: |
+          touch .env
+          echo MONGO_USER=${{ env.MONGO_USER }} >> .env
+          echo MONGO_PASSWORD=${{ env.MONGO_PASSWORD }} >> .env
+          echo MONGO_DB=${{ env.MONGO_DB }} >> .env
+          echo MONGO_HOST=${{ env.MONGO_HOST }} >> .env
+          echo MONGO_PORT=${{ env.MONGO_PORT }} >> .env
       - name: Set up MongoDB
         run: |
-          cd .github/helper_files
           docker-compose up --build -d mongodb
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
