@@ -65,6 +65,7 @@ The required environment variables for development are:
 * `MONGO_PASSWORD`: The database user password 
 * `MONGO_DB`: The database host. _For local development use_ `localhost`
 * `MONGO_HOST`: The database name.
+* `MONGO_PORT`: The database port.
 
 ### Local Development
 In order to run the project on your workstation, you must create a database named according to the value of the
@@ -115,7 +116,7 @@ __Set up the `.env` at the root of the repository!__
 * `MONGO_USER`: The database user
 * `MONGO_PASSWORD`: The database user password 
 * `MONGO_HOST`: `mongodb` _The host name __must__ be `mongodb`_
-* `MONGO_PORT`: 27018
+* `MONGO_PORT`: 27018 _You must use this port_
 * `MONGO_DB`: The database name.
 
 Then just execute the following:
@@ -144,12 +145,112 @@ The API & the documentation pages page are available to the same addresses that 
 
 ### Schema
 
-```json
+The below json are just a representation of the documents that are stored to the database. 
 
+Incidents Collection
+
+```json
+{
+  "_id":{"$oid":"id"},
+  "creation_date":{"$date":"YYYY-MM-DDTHH:MM:SS.000Z"},
+  "status":"string",
+  "completion_date":{"$date":"YYYY-MM-DDTHH:MM:SS.000Z"},
+  "service_request_number":"string",
+  "type_of_service_request":"string", // Normalized with ABANDONDED_VEHICLE, GARBAGE_CARTS, LIGHTS_ALL_OUT etc.
+  "street_address":"3020 N WATERLOO CT",
+  "zip_code":"int",
+  "zip_codes":"int",
+  "ward":"int",
+  "wards":"int",
+  "historical_wards_03_15":"int",
+  "police_district":"int",
+  "community_area":"int",
+  "community_areas":"int",
+  "ssa":"int",
+  "census_tracts":"int",
+  "geo_location":{"type":"Point","coordinates":["longitude/double","latitude/double"]},
+  "x_coordinate":"double",
+  "y_coordinate":"double",
+  
+  // List of ObjectIDs of citizens that voted this incident
+  "voted_by":[{"$oid":"id"},{"$oid":"id"}],
+  "total_votes":"int",
+  
+  // Optional  
+  "current_activity":"string",
+  "most_recent_action":"string",
+
+  // ABANDONED_VEHICLE
+  "license_plate":"string",
+  "vehicle_make_model":"string",
+  "vehicle_color":"string",
+  "days_of_report_as_parked":"int",
+  
+  // POTHOLE or GARBAGE_CART
+  "number_of_elements": "int",
+  
+  // GRAFFITI
+  "surface":"str",
+
+  //TREE & GRAFFITI
+  "location":"str",
+
+  //RODENT_BAITING
+  "number_of_premises_baited":"int",
+  "number_of_premises_w_garbage":"int",
+  "number_of_premises_w_rats":"int",
+
+  // SANITATION_VIOLATION
+  "nature_of_code_violation":"str"
+}
 ```
 
-Some info about the schema and the decisions that were made in order to conclude to this state.
+Citizens Collection
 
+```json
+{
+  "_id":{"$oid":"id"},
+  "name":"string",
+  "street_address":"string",
+  "telephone_number":"string",
+  
+  // List of ObjectIDs of incidents that this user voted
+  "voted_incidents":[{"$oid":"id"},{"$oid":"id"}],
+  
+  // The total number of votes of this user
+  "total_votes":"int",
+  
+  // List-Set that contains all the wards of the incidents that this user voted
+  "wards":["int"],
+  
+  // The total number of wards
+  "total_wards":"int"
+}
+```
+
+__Indexes__
+
+Incidents Collection
+
+```python
+db['incidents'].create_index([('type_of_service_request', pymongo.ASCENDING)])
+db['incidents'].create_index([('creation_date', pymongo.ASCENDING)])
+db['incidents'].create_index([('type_of_service_request', pymongo.ASCENDING), ('creation_date', pymongo.ASCENDING)])
+db['incidents'].create_index([('geo_location', pymongo.GEOSPHERE)])
+db['incidents'].create_index([('total_votes', pymongo.ASCENDING)])
+```
+
+Citizens Collection
+
+```python
+db['citizens'].create_index([('total_votes', pymongo.ASCENDING)])
+db['citizens'].create_index([('total_wards', pymongo.ASCENDING)])
+db['citizens'].create_index([('telephone_number', pymongo.ASCENDING)])
+db['citizens'].create_index([('name', pymongo.ASCENDING)])
+```
+
+
+Some info about the schema and the decisions that were made in order to conclude to this state.
 
 
 ### Queries
