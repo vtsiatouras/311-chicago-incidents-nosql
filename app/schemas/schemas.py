@@ -5,7 +5,7 @@ class TypeOfServiceRequest(str, Enum):
     abandoned_vehicle = 'ABANDONED_VEHICLE'
     alley_lights = 'ALLEY_LIGHTS'
     graffiti = 'GRAFFITI'
-    garbage = 'GARBAGE'
+    garbage = 'GARBAGE_CART'
     pothole = 'POTHOLE'
     rodent_baiting = 'RODENT_BAITING'
     sanitation_violation = 'SANITATION_VIOLATION'
