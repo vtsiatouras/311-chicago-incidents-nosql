@@ -7,8 +7,6 @@ This repository contains a FastAPI application that connects to a noSQL Mongo Da
 All the data used for the development can be found [here](https://www.kaggle.com/chicago/chicago-311-service-requests
 ). Also I have uploaded some of these data inside this repository, which can be found [here](https://github.com/VangelisTsiatouras/311-chicago-incidents-nosql/tree/main/assist_material/datasets/zip).
 
-## Demo
-
 
 ## FastAPI Application
 
@@ -141,7 +139,609 @@ The database is exposed at mongodb://localhost:27018/
 
 The API & the documentation pages page are available to the same addresses that referred above.
 
-## Database Report
+
+## Endpoints
+
+### GET total-requests-per-type/  
+
+__params__  
+start_date: YYYY-MM-DDTHH:MM:SS  
+end_date:   YYYY-MM-DDTHH:MM:SS  
+
+eg.
+
+```text
+curl http://0.0.0.0:8000/api/v1/total-requests-per-type?start_date=2010-10-10T00%3A00%3A00&end_date=2011-10-10T00%3A00%3A00
+
+[
+  {
+    "_id": "GRAFFITI",
+    "count": 124191
+  },
+  {
+    "_id": "POTHOLE",
+    "count": 72652
+  },
+  {
+    "_id": "STREET_ALL_LIGHTS",
+    "count": 64028
+  },
+  {
+    "_id": "GARBAGE_CART",
+    "count": 42675
+  },
+  {
+    "_id": "ALLEY_LIGHTS",
+    "count": 38843
+  },
+  {
+    "_id": "TREE_TRIMS",
+    "count": 33809
+  },
+  {
+    "_id": "RODENT_BAITING",
+    "count": 28808
+  },
+  {
+    "_id": "STREET_ONE_LIGHT",
+    "count": 27851
+  },
+  {
+    "_id": "ABANDONED_VEHICLE",
+    "count": 19519
+  },
+  {
+    "_id": "TREE_DEBRIS",
+    "count": 18591
+  },
+  {
+    "_id": "SANITATION_VIOLATION",
+    "count": 15382
+  }
+]
+
+response time 1.18 s
+```
+
+### GET total-requests-per-day/  
+
+__params__  
+start_date:   YYYY-MM-DDTHH:MM:SS  
+end_date:     YYYY-MM-DDTHH:MM:SS  
+request_type: TYPE_OF_REQUEST   
+
+eg.
+
+```text
+curl http://0.0.0.0:8000/api/v1/total-requests-per-day?start_date=2010-10-10T00%3A00%3A00&end_date=2017-10-10T00%3A00%3A00&request_type=ABANDONED_VEHICLE
+[
+  {
+    "_id": "2017-10-10T00:00:00",
+    "count": 111
+  },
+  {
+    "_id": "2017-10-09T00:00:00",
+    "count": 84
+  },
+  {
+    "_id": "2017-10-08T00:00:00",
+    "count": 40
+  },
+  {
+    "_id": "2017-10-07T00:00:00",
+    "count": 49
+  },
+  {
+    "_id": "2017-10-06T00:00:00",
+    "count": 76
+  },
+  {
+    "_id": "2017-10-05T00:00:00",
+    "count": 114
+  },
+  {
+    "_id": "2017-10-04T00:00:00",
+    "count": 91
+  },
+  {
+    "_id": "2017-10-03T00:00:00",
+    "count": 113
+  },
+  {
+    "_id": "2017-10-02T00:00:00",
+    "count": 102
+  },
+  ...
+]
+
+response time 608 ms
+```
+
+### GET three-most-common-requests-per-zipcode/  
+
+__params__   
+date:   YYYY-MM-DDTHH:MM:SS  
+
+eg.  
+```text
+curl http://0.0.0.0:8000/api/v1/three-most-common-requests-per-zipcode?date=2012-10-10T00%3A00%3A00
+
+[
+  {
+    "_id": 60630.0,
+    "top_three": [
+      {
+        "type_of_service_request": "RODENT_BAITING",
+        "count": 4
+      },
+      {
+        "type_of_service_request": "ABANDONED_VEHICLE",
+        "count": 4
+      },
+      {
+        "type_of_service_request": "GARBAGE_CART",
+        "count": 3
+      }
+    ]
+  },
+  {
+    "_id": 60637.0,
+    "top_three": [
+      {
+        "type_of_service_request": "STREET_ALL_LIGHTS",
+        "count": 11
+      },
+      {
+        "type_of_service_request": "TREE_DEBRIS",
+        "count": 5
+      },
+      {
+        "type_of_service_request": "TREE_TRIMS",
+        "count": 5
+      }
+    ]
+  },
+  {
+    "_id": 60607.0,
+    "top_three": [
+      {
+        "type_of_service_request": "TREE_TRIMS",
+        "count": 1
+      },
+      {
+        "type_of_service_request": "STREET_ALL_LIGHTS",
+        "count": 1
+      },
+      {
+        "type_of_service_request": "GARBAGE_CART",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "_id": 60631.0,
+    "top_three": [
+      {
+        "type_of_service_request": "TREE_TRIMS",
+        "count": 8
+      },
+      {
+        "type_of_service_request": "TREE_DEBRIS",
+        "count": 5
+      },
+      {
+        "type_of_service_request": "STREET_ALL_LIGHTS",
+        "count": 4
+      }
+    ]
+  },
+  {
+    "_id": 60620.0,
+    "top_three": [
+      {
+        "type_of_service_request": "GARBAGE_CART",
+        "count": 16
+      },
+      {
+        "type_of_service_request": "STREET_ONE_LIGHT",
+        "count": 14
+      },
+      {
+        "type_of_service_request": "TREE_TRIMS",
+        "count": 10
+      }
+    ]
+  },
+  ...
+]
+
+response time 49.7 ms
+```
+
+### GET three-least-common-wards/  
+
+__params__  
+request_type: TYPE_OF_REQUEST  
+
+eg.  
+
+```text
+curl http://0.0.0.0:8000/api/v1/three-least-common-wards?request_type=SANITATION_VIOLATION
+
+[
+  {
+    "_id": 0.0,
+    "count": 3
+  },
+  {
+    "_id": 48.0,
+    "count": 1111
+  },
+  {
+    "_id": 4.0,
+    "count": 1428
+  }
+]
+
+response time 512ms
+```
+
+### GET /average-completion-time-per-request  
+
+__params__  
+start_date:   YYYY-MM-DDTHH:MM:SS  
+end_date:     YYYY-MM-DDTHH:MM:SS  
+
+eg.  
+
+```text
+curl http://0.0.0.0:8000/api/v1/average-completion-time-per-request?start_date=2010-10-10T00%3A00%3A00&end_date=2011-10-10T00%3A00%3A00
+
+[
+  {
+    "_id": "ABANDONED_VEHICLE",
+    "average_completion_time": "20 days, 11:50:22.347456"
+  },
+  {
+    "_id": "ALLEY_LIGHTS",
+    "average_completion_time": "53 days, 20:06:26.664264"
+  },
+  {
+    "_id": "GARBAGE_CART",
+    "average_completion_time": "69 days, 9:13:57.933216"
+  },
+  {
+    "_id": "GRAFFITI",
+    "average_completion_time": "6 days, 3:23:14.970650"
+  },
+  {
+    "_id": "POTHOLE",
+    "average_completion_time": "12 days, 12:11:49.970820"
+  },
+  {
+    "_id": "RODENT_BAITING",
+    "average_completion_time": "21 days, 0:44:56.251041"
+  },
+  {
+    "_id": "SANITATION_VIOLATION",
+    "average_completion_time": "3 days, 22:46:13.839553"
+  },
+  {
+    "_id": "STREET_ALL_LIGHTS",
+    "average_completion_time": "5 days, 20:55:07.852814"
+  },
+  {
+    "_id": "STREET_ONE_LIGHT",
+    "average_completion_time": "34 days, 16:05:46.414850"
+  },
+  {
+    "_id": "TREE_DEBRIS",
+    "average_completion_time": "6 days, 6:11:19.683718"
+  },
+  {
+    "_id": "TREE_TRIMS",
+    "average_completion_time": "367 days, 7:19:20.318258"
+  }
+]
+
+response time 1.72 s
+```
+
+### GET most-common-service-in-bounding-box/  
+
+__params__  
+date:                YYYY-MM-DDTHH:MM:SS  
+point_a_longitude:   double  
+point_a_latitude:    double  
+point_b_longitude:   double  
+point_b_latitude:    double  
+ 
+eg.  
+
+```text
+curl http://0.0.0.0:8000/api/v1/most-common-service-in-bounding-box?date=2010-10-10T00%3A00%3A00&point_a_longitude=-86.64615132728282&point_a_latitude=40.93702589972641&point_b_longitude=-88.64615132728282&point_b_latitude=43.93702589972641
+
+[
+  {
+    "_id": "TREE_TRIMS",
+    "count": 22
+  }
+]
+
+response time 32.2 ms
+```
+
+### GET /top-fifty-upvoted-requests  
+
+__params__   
+date:   YYYY-MM-DDTHH:MM:SS  
+
+eg.  
+
+```text
+curl http://0.0.0.0:8000/api/v1/top-fifty-upvoted-requests?date=2010-12-10T00%3A00%3A00
+
+
+  {
+    "_id": "6001ebe85c8559dd9d6b2111",
+    "total_votes": 30
+  },
+  {
+    "_id": "6001ed755c8559dd9d8d2508",
+    "total_votes": 28
+  },
+  {
+    "_id": "6001ec505c8559dd9d749758",
+    "total_votes": 25
+  },
+  {
+    "_id": "6001ed755c8559dd9d8d250f",
+    "total_votes": 25
+  },
+  {
+    "_id": "6001eba85c8559dd9d63abc8",
+    "total_votes": 24
+  },
+  {
+    "_id": "6001eca55c8559dd9d7d27ae",
+    "total_votes": 24
+  },
+  {
+    "_id": "6001ebe85c8559dd9d6b2108",
+    "total_votes": 24
+  },
+  {
+    "_id": "6001ed755c8559dd9d8d2504",
+    "total_votes": 23
+  },
+  {
+    "_id": "6001ebe85c8559dd9d6b2121",
+    "total_votes": 23
+  },
+  ...
+]
+
+
+response time 29.2 ms
+```
+
+### GET top-fifty-active-citizens/  
+
+eg.  
+
+```text
+curl http://0.0.0.0:8000/api/v1/top-fifty-active-citizens
+
+[
+  {
+    "_id": "5ffdf8750d58d021a3b4f4f7",
+    "total_votes": 1000
+  },
+  {
+    "_id": "5ffdf8750d58d021a3b45b71",
+    "total_votes": 1000
+  },
+  {
+    "_id": "5ffdf8750d58d021a3b4c97b",
+    "total_votes": 1000
+  },
+  {
+    "_id": "5ffdf8750d58d021a3b443b3",
+    "total_votes": 1000
+  },
+  {
+    "_id": "5ffdf8750d58d021a3b4413c",
+    "total_votes": 1000
+  },
+  {
+    "_id": "5ffdf8750d58d021a3b4f63b",
+    "total_votes": 1000
+  },
+  ...
+]
+
+response time 132 ms
+```
+
+### GET top-fifty-wards-citizens/  
+
+eg.  
+
+```text
+curl http://0.0.0.0:8000/api/v1/top-fifty-wards-citizens
+
+[
+  {
+    "_id": "5ffdf8750d58d021a3b4330d",
+    "total_wards": 50
+  },
+  {
+    "_id": "5ffdf8750d58d021a3b432fd",
+    "total_wards": 50
+  },
+  {
+    "_id": "5ffdf8750d58d021a3b432eb",
+    "total_wards": 50
+  },
+  {
+    "_id": "5ffdf8750d58d021a3b43309",
+    "total_wards": 50
+  },
+  {
+    "_id": "5ffdf8750d58d021a3b43301",
+    "total_wards": 50
+  },
+  {
+    "_id": "5ffdf8750d58d021a3b432ea",
+    "total_wards": 50
+  },
+  ...
+]
+
+
+response time 128 ms
+```
+
+
+### GET phone-number-incidents/  
+
+eg.  
+
+```text
+[
+  {
+    "_id": "(961)407-5332x47507",
+    "incident_ids": [
+       "6001eb7a5c8559dd9d5c04b4",
+       "6001eb7a5c8559dd9d5c2012",
+       "6001eb7a5c8559dd9d5c3a57",
+       "6001eb7a5c8559dd9d5c57c2",
+       "6001eb7a5c8559dd9d5c66f2",
+       "6001eb7a5c8559dd9d5c9e2f",
+       "6001eb7a5c8559dd9d5cbf3d",
+       "6001eb7a5c8559dd9d5cf6d7",
+       "6001eb7a5c8559dd9d5d22b4",
+       "6001eb7a5c8559dd9d5d38f6",
+       "6001eb7a5c8559dd9d5d3e46",
+       ...
+      ]
+   },
+   {
+     "_id": "(+30)2105999999",
+     "incident_ids": [
+        "6001eb7b5c8559dd9d5e32ee",
+        "6001eb7b5c8559dd9d5e3529",
+        "6001eb7b5c8559dd9d5e3b7d",
+        "6001eb7b5c8559dd9d5e5e97",
+        "6001eb7b5c8559dd9d5e6cb3",
+        "6001eb7b5c8559dd9d5e9421",
+        "6001eb7b5c8559dd9d5eb5fb"
+      ]
+   }
+]
+
+response time 596 ms
+```
+
+### GET citizen-wards/  
+
+__params__  
+name:  str  
+ 
+eg.  
+
+```text
+curl http://0.0.0.0:8000/api/v1/citizen-wards?name=Alexander%20Rose
+
+[
+  {
+    "_id": "Alexander Rose",
+    "wards": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      ...
+    ]
+  }
+]
+
+response time 32.2
+```
+
+
+### POST create-incident/  
+
+__body__  
+
+```json
+{
+  "creation_date": "YYYY-MM-DDTHH:MM:SS",
+  "completion_date": "YYYY-MM-DDTHH:MM:SS",
+  "status": "string",
+  "service_request_number": "string",
+  "type_of_service_request": "string",
+  "current_activity": "string",
+  "most_recent_action": "string",
+  "street_address": "string",
+  "zip_code": 0,
+  "zip_codes": 0,
+  "x_coordinate": 0,
+  "y_coordinate": 0,
+  "ward": 0,
+  "wards": 0,
+  "historical_wards_03_15": 0,
+  "police_district": 0,
+  "community_area": 0,
+  "community_areas": 0,
+  "ssa": 0,
+  "census_tracts": 0,
+  "license_plate": "string",
+  "vehicle_make_model": "string",
+  "vehicle_color": "string",
+  "days_of_report_as_parked": 0,
+  "number_of_elements": 0,
+  "surface": "string",
+  "location": "string",
+  "number_of_premises_baited": 0,
+  "number_of_premises_w_garbage": 0,
+  "number_of_premises_w_rats": 0,
+  "nature_of_code_violation": "string"
+}
+```
+
+### GET get-incident/  
+
+__params__  
+incident_id:  <str in ObjectId format>  
+
+
+### POST create-upvote  
+
+__body__  
+
+```json
+{
+  "name": "string",
+  "street_address": "string",
+  "telephone_number": "string",
+  "incident": "string in ObjectId format>"
+}
+```
+
+### GET get-citizen/  
+ 
+__params__   
+citizen_id:  <str in ObjectId format>  
+
+
+## Database Report  
 
 ### Schema
 
@@ -157,7 +757,7 @@ Incidents Collection
   "completion_date":{"$date":"YYYY-MM-DDTHH:MM:SS.000Z"},
   "service_request_number":"string",
   "type_of_service_request":"string", // Normalized with ABANDONDED_VEHICLE, GARBAGE_CARTS, LIGHTS_ALL_OUT etc.
-  "street_address":"3020 N WATERLOO CT",
+  "street_address":"string",
   "zip_code":"int",
   "zip_codes":"int",
   "ward":"int",
@@ -190,10 +790,10 @@ Incidents Collection
   "number_of_elements": "int",
   
   // GRAFFITI
-  "surface":"str",
+  "surface":"string",
 
   //TREE & GRAFFITI
-  "location":"str",
+  "location":"string",
 
   //RODENT_BAITING
   "number_of_premises_baited":"int",
@@ -201,7 +801,7 @@ Incidents Collection
   "number_of_premises_w_rats":"int",
 
   // SANITATION_VIOLATION
-  "nature_of_code_violation":"str"
+  "nature_of_code_violation":"string"
 }
 ```
 
@@ -250,7 +850,7 @@ db['citizens'].create_index([('name', pymongo.ASCENDING)])
 ```
 
 
-Some info about the schema and the decisions that were made in order to conclude to this state.
+As you can see, the database consists of two main collections, the Incidents collection and the Citizens collection. The Incidents collection stores all the data of the csv files, only the type_of_request is normalized to specific strings because there were found incidents of the same type labeled with different values. The Citizens collection stores data about the people who upvote incidents. Also this table has denormalized data from the incidents collection, such as the wards of the voted incidents, in order to prevent unnesessary joins with the incidents collection. A good example is Query 9, using denormalization the query executes at ~24ms which is much faster in contrast to the equivalent join(lookup) query. This practice though comes with the price of a much more complicated insertion procedure at the Citizens table, but this is not a big deal because this app is intented to have low traffic at insertions and high traffic at quering. Also the Citizens table is populated initially with fake data and distribute random votes to 2M incidents keeping in mind that each citizen should have 1000 votes at the most.
 
 
 ### Queries
