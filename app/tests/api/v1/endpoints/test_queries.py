@@ -114,8 +114,8 @@ def test_total_requests_per_day_start_date_greater_than_end_date(client: TestCli
 
 def test_total_requests_per_request_type_param(client: TestClient) -> None:
     app.dependency_overrides[get_db] = override_db_conn_with_data
-    param_types = ['ABANDONED_VEHICLE', 'ALLEY_LIGHTS', 'GRAFFITI', 'GARBAGE', 'POTHOLE', 'RODENT_BAITING',
-                   'SANITATION_VIOLATION', 'STREET_ONE_LIGHT', 'STREET_ALL_LIGHTS', 'TREE_TRIM', 'TREE_DEBRIS']
+    param_types = ['ABANDONED_VEHICLE', 'ALLEY_LIGHTS', 'GRAFFITI', 'GARBAGE_CART', 'POTHOLE', 'RODENT_BAITING',
+                   'SANITATION_VIOLATION', 'STREET_ONE_LIGHT', 'STREET_ALL_LIGHTS', 'TREE_TRIMS', 'TREE_DEBRIS']
     for param in param_types:
         r = client.get(f"{settings.API_V1_STR}/total-requests-per-day",
                        params={'start_date': '2013-04-09T00:00:00', 'end_date': '2014-04-09T00:00:00',
