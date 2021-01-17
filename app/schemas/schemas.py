@@ -11,5 +11,5 @@ class TypeOfServiceRequest(str, Enum):
     sanitation_violation = 'SANITATION_VIOLATION'
     street_one_light = 'STREET_ONE_LIGHT'
     street_all_lights = 'STREET_ALL_LIGHTS'
-    tree_trim = 'TREE_TRIM'
+    tree_trims = 'TREE_TRIMS'
     tree_debris = 'TREE_DEBRIS'
