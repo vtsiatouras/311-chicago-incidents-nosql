@@ -100,8 +100,6 @@ The API is available at http://127.0.0.1:8000/api/v1/
 
 The documentation Swagger page of the API is available at http://127.0.0.1:8000/docs or with ReDoc http://127.0.0.1:8000/redoc
 
-Also the Django Admin page is available at http://127.0.0.1:8000/admin/
-
 
 ## Installation using Docker
 
@@ -142,7 +140,7 @@ The API & the documentation pages page are available to the same addresses that 
 
 ## Endpoints
 
-### GET total-requests-per-type/  
+### GET /total-requests-per-type/  
 
 __params__  
 start_date: YYYY-MM-DDTHH:MM:SS  
@@ -203,7 +201,7 @@ curl http://0.0.0.0:8000/api/v1/total-requests-per-type?start_date=2010-10-10T00
 response time 1.18 s
 ```
 
-### GET total-requests-per-day/  
+### GET /total-requests-per-day/  
 
 __params__  
 start_date:   YYYY-MM-DDTHH:MM:SS  
@@ -257,7 +255,7 @@ curl http://0.0.0.0:8000/api/v1/total-requests-per-day?start_date=2010-10-10T00%
 response time 608 ms
 ```
 
-### GET three-most-common-requests-per-zipcode/  
+### GET /three-most-common-requests-per-zipcode/  
 
 __params__   
 date:   YYYY-MM-DDTHH:MM:SS  
@@ -358,7 +356,7 @@ curl http://0.0.0.0:8000/api/v1/three-most-common-requests-per-zipcode?date=2012
 response time 49.7 ms
 ```
 
-### GET three-least-common-wards/  
+### GET /three-least-common-wards/  
 
 __params__  
 request_type: TYPE_OF_REQUEST  
@@ -386,7 +384,7 @@ curl http://0.0.0.0:8000/api/v1/three-least-common-wards?request_type=SANITATION
 response time 512ms
 ```
 
-### GET /average-completion-time-per-request  
+### GET /average-completion-time-per-request/ 
 
 __params__  
 start_date:   YYYY-MM-DDTHH:MM:SS  
@@ -447,7 +445,7 @@ curl http://0.0.0.0:8000/api/v1/average-completion-time-per-request?start_date=2
 response time 1.72 s
 ```
 
-### GET most-common-service-in-bounding-box/  
+### GET /most-common-service-in-bounding-box/  
 
 __params__  
 date:                YYYY-MM-DDTHH:MM:SS  
@@ -471,7 +469,7 @@ curl http://0.0.0.0:8000/api/v1/most-common-service-in-bounding-box?date=2010-10
 response time 32.2 ms
 ```
 
-### GET /top-fifty-upvoted-requests  
+### GET /top-fifty-upvoted-requests/  
 
 __params__   
 date:   YYYY-MM-DDTHH:MM:SS  
@@ -525,7 +523,7 @@ curl http://0.0.0.0:8000/api/v1/top-fifty-upvoted-requests?date=2010-12-10T00%3A
 response time 29.2 ms
 ```
 
-### GET top-fifty-active-citizens/  
+### GET /top-fifty-active-citizens/  
 
 eg.  
 
@@ -563,7 +561,7 @@ curl http://0.0.0.0:8000/api/v1/top-fifty-active-citizens
 response time 132 ms
 ```
 
-### GET top-fifty-wards-citizens/  
+### GET /top-fifty-wards-citizens/  
 
 eg.  
 
@@ -603,7 +601,7 @@ response time 128 ms
 ```
 
 
-### GET phone-number-incidents/  
+### GET /phone-number-incidents/  
 
 eg.  
 
@@ -643,7 +641,7 @@ eg.
 response time 596 ms
 ```
 
-### GET citizen-wards/  
+### GET /citizen-wards/  
 
 __params__  
 name:  str  
@@ -676,7 +674,7 @@ response time 32.2
 ```
 
 
-### POST create-incident/  
+### POST /create-incident/  
 
 __body__  
 
@@ -716,13 +714,13 @@ __body__
 }
 ```
 
-### GET get-incident/  
+### GET /get-incident/  
 
 __params__  
-incident_id:  <str in ObjectId format>  
+incident_id: str in ObjectId format  
 
 
-### POST create-upvote  
+### POST /create-upvote  
 
 __body__  
 
@@ -735,10 +733,10 @@ __body__
 }
 ```
 
-### GET get-citizen/  
+### GET /get-citizen/  
  
 __params__   
-citizen_id:  <str in ObjectId format>  
+citizen_id: str in ObjectId format  
 
 
 ## Database Report  
