@@ -1,6 +1,6 @@
 # 311 Chicago Incidents noSQL
 
-[![Django CI](https://github.com/VangelisTsiatouras/311-chicago-incidents-nosql/workflows/FastAPI%20CI/badge.svg)](https://github.com/VangelisTsiatouras/311-chicago-incidents-nosql/actions)  [![codecov](https://codecov.io/gh/VangelisTsiatouras/311-chicago-incidents-nosql/branch/main/graph/badge.svg?token=0RCQE0L9RO)](https://codecov.io/gh/VangelisTsiatouras/311-chicago-incidents-nosql)  [![python](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9-blue.svg)](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9-blue.svg)  [![mongodb](https://img.shields.io/badge/mongodb-4.4.x-589636.svg)](https://img.shields.io/badge/mongodb-4.4.x-589636.svg)
+[![Django CI](https://github.com/VangelisTsiatouras/311-chicago-incidents-nosql/workflows/FastAPI%20CI/badge.svg)](https://github.com/VangelisTsiatouras/311-chicago-incidents-nosql/actions)  [![codecov](https://codecov.io/gh/VangelisTsiatouras/311-chicago-incidents-nosql/branch/main/graph/badge.svg?token=0RCQE0L9RO)](https://codecov.io/gh/VangelisTsiatouras/311-chicago-incidents-nosql)  [![Python](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9-blue.svg?logo=python&logoColor=white)](https://www.python.org/)  [![mongodb](https://img.shields.io/badge/mongodb-4.4.x-589636.svg)](https://www.mongodb.com/)
 
 This repository contains a FastAPI application that connects to a noSQL Mongo Database and process some metrics for the incidents that happen to Chicago City.
 
