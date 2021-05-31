@@ -61,8 +61,8 @@ The required environment variables for development are:
 
 * `MONGO_USER`: The database user
 * `MONGO_PASSWORD`: The database user password 
-* `MONGO_DB`: The database host. _For local development use_ `localhost`
-* `MONGO_HOST`: The database name.
+* `MONGO_HOST`: The database host. _For local development use_ `localhost`
+* `MONGO_DB`: The database name.
 * `MONGO_PORT`: The database port.
 
 ### Local Development
